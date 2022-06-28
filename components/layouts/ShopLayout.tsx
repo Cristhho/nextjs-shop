@@ -1,6 +1,8 @@
 import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
+import Navbar from '../ui/Navbar';
+
 type ShopLayoutProps = {
   title: string;
   pageDescription: string;
@@ -20,7 +22,9 @@ const ShopLayout: FC<PropsWithChildren<ShopLayoutProps>> = ({ children, title, p
             <meta name='og:image' content={imageFullUrl} />
         }
       </Head>
-      <nav></nav>
+      <nav>
+        <Navbar />
+      </nav>
       <main style={{
         margin: '80px auto',
         maxWidth: '1440px',
