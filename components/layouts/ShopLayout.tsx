@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../ui/Navbar';
-import { SideMenu } from '../ui/SideMenu';
+import { SideMenu } from '../ui';
 
 type ShopLayoutProps = {
   title: string;
