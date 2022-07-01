@@ -1,6 +1,4 @@
 import { createTheme } from '@mui/material/styles';
-import { red,  } from '@mui/material/colors';
-
 
 export const lightTheme = createTheme({
   palette: {
@@ -12,7 +10,10 @@ export const lightTheme = createTheme({
       main: '#3A64D8'
     },
     info: {
-      main: '#ffffff'
+      main: '#ededed'
+    },
+    background: {
+      default: '#ededed'
     }
   },
   components: {
@@ -28,7 +29,7 @@ export const lightTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: '#ededed',
           height: 60
         },
       }
