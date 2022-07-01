@@ -6,7 +6,7 @@ import { initialData } from '../../database/products';
 import { ItemCounter } from '../ui';
 
 type CartListProps = {
-
+  editable?: boolean
 }
 
 const products = [
@@ -15,7 +15,7 @@ const products = [
   initialData.products[2]
 ];
 
-export const CartList: FC<CartListProps> = () => {
+export const CartList: FC<CartListProps> = ({ editable }) => {
   return (
     <>
       {
@@ -38,12 +38,20 @@ export const CartList: FC<CartListProps> = () => {
               <Box display='flex' flexDirection='column'>
                 <Typography variant='body1'>{product.title}</Typography>
                 <Typography variant='body1'>Talla {product.sizes[0]}</Typography>
-                <ItemCounter />
+                {
+                  editable
+                  ? <ItemCounter />
+                  : <Typography variant='h5'>3 items</Typography>
+                }
               </Box>
             </Grid>
             <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
               <Typography variant='subtitle1'>{`$${product.price}`}</Typography>
-              <Button variant='text' color='error'>Remover</Button>
+              {
+                editable && (
+                  <Button variant='text' color='error'>Remover</Button>
+                )
+              }
             </Grid>
           </Grid>
         ))
