@@ -15,7 +15,7 @@ const products = [
   initialData.products[2]
 ];
 
-export const CartList: FC<CartListProps> = ({ editable }) => {
+export const CartList: FC<CartListProps> = ({ editable = false }) => {
   return (
     <>
       {

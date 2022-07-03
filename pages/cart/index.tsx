@@ -21,7 +21,7 @@ const CartPage: NextPage = () => {
               <Typography variant='h2'>Orden</Typography>
               <Divider sx={{my: 1}} />
               <OrderSummary />
-              <Box sx={{mt: 3}}>
+              <Box sx={{mt: 3}} display='flex' flexDirection='column'>
                 <Button color='secondary' className='circular-btn'>Checkout</Button>
               </Box>
             </CardContent>
