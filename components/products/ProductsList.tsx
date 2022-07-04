@@ -10,7 +10,7 @@ type ProductsListProps = {
 
 export const ProductsList:FC<ProductsListProps> = ({ products }) => {
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={4} sx={{mt: 2}}>
       {
         products.map((product) => (
           <ProductCard
