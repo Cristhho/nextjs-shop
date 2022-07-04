@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticProps } from 'next';
+import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 
@@ -31,7 +31,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ title, description, product
   );
 }
 
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [{params:{gender:'men'}},{params:{gender:'women'}},{params:{gender:'kid'}}],
     fallback: false

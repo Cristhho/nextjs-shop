@@ -1,11 +1,11 @@
-import type { NextPage, GetServerSideProps } from 'next';
+import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
 import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 import { IProduct } from '../../interfaces';
-import { getProductBySlug } from '../../database/dbProducts';
+import { dbProducts } from '../../database';
 
 type ProductPageProps = {
   product: IProduct
@@ -45,10 +45,21 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
   );
 }
 
-export const getServerSideProps:GetServerSideProps = async ({ params }) => {
-  const { slug='' } = params as { slug: string };
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+  const slugs = await dbProducts.getAllProductSlugs();
 
-  const product = await getProductBySlug(slug);
+  return {
+    paths: slugs.map(({slug}) => ({
+      params: { slug }
+    })),
+    fallback: 'blocking'
+  }
+}
+
+export const getStaticProps:GetStaticProps = async ({ params }) => {
+  const { slug = '' } = params as { slug: string };
+
+  const product = await dbProducts.getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -56,14 +67,15 @@ export const getServerSideProps:GetServerSideProps = async ({ params }) => {
         destination: '/',
         permanent: false
       }
-    };
+    }
   }
 
   return {
-    props:{
+    props: {
       product
-    }
-  };
+    },
+    revalidate: 86400
+  }
 }
 
 export default ProductPage;
