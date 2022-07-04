@@ -1,14 +1,18 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
-import { initialData } from '../../database/products';
 import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
+import { IProduct } from '../../interfaces';
+import { getProductBySlug } from '../../database/dbProducts';
 
-const product = initialData.products[0];
+type ProductPageProps = {
+  product: IProduct
+}
 
-const ProductPage: NextPage = () => {
+const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
+
   return (
     <ShopLayout
       title={product.title}
@@ -21,7 +25,7 @@ const ProductPage: NextPage = () => {
         <Grid item xs={12} sm={5}>
           <Box display='flex' flexDirection='column'>
             <Typography variant='h1' component='h1'>{product.title}</Typography>
-            <Typography variant='subtitle1' component='h2'>{product.price}</Typography>
+            <Typography variant='subtitle1' component='h2'>${product.price}</Typography>
             <Box sx={{my: 2}}>
               <Typography variant='subtitle2'>Cantidad</Typography>
               <ItemCounter />
@@ -39,6 +43,27 @@ const ProductPage: NextPage = () => {
       </Grid>
     </ShopLayout>
   );
+}
+
+export const getServerSideProps:GetServerSideProps = async ({ params }) => {
+  const { slug='' } = params as { slug: string };
+
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
+
+  return {
+    props:{
+      product
+    }
+  };
 }
 
 export default ProductPage;
