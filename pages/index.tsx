@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 
 import ShopLayout from '../components/layouts/ShopLayout';
 import { ProductsList } from '../components/products';
+import { FullScreenLoading } from '../components/ui';
 import { useProducts } from '../hooks';
 
 const Home: NextPage = () => {
@@ -18,7 +19,7 @@ const Home: NextPage = () => {
 
       {
         isLoading
-          ? <Typography variant='body1'>Cargando...</Typography>
+          ? <FullScreenLoading />
           : <ProductsList products={products} />
       }
     </ShopLayout>
