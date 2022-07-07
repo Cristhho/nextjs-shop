@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
@@ -7,6 +8,7 @@ import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 import { ICartProduct, IProduct, ISize } from '../../interfaces';
 import { dbProducts } from '../../database';
+import { CartContext } from '../../context';
 
 type ProductPageProps = {
   product: IProduct
@@ -22,6 +24,8 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
     gender: product.gender,
     quantity: 1
   });
+  const { onAddProductToCart } = useContext(CartContext);
+  const router = useRouter();
 
   const onSelectedSize = (size: ISize) => {
     setTempCartProduct((currentCartProduct) => ({
@@ -42,6 +46,13 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
         quantity: currentCartProduct.quantity === 1 ? 1 : --currentCartProduct.quantity
       }));
     }
+  }
+
+  const onAddProduct = () => {
+    if (!tempCartProduct.size) return;
+
+    onAddProductToCart(tempCartProduct);
+    router.push('/cart');
   }
 
   return (
@@ -73,7 +84,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
             
             {
               product.inStock > 0
-              ? <Button color='secondary' className='circular-btn' disabled={tempCartProduct.size ? false : true}>
+              ? <Button color='secondary' className='circular-btn' disabled={tempCartProduct.size ? false : true} onClick={onAddProduct}>
                   {
                     tempCartProduct.size
                     ? 'Agregar al carrito'
