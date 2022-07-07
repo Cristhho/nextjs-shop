@@ -30,6 +30,20 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
     }));
   }
 
+  const onUpdateQuantity = (adding: boolean) => {
+    if (adding) {
+      setTempCartProduct((currentCartProduct) => ({
+        ...currentCartProduct,
+        quantity: currentCartProduct.quantity === product.inStock ? product.inStock : ++currentCartProduct.quantity
+      }));
+    } else {
+      setTempCartProduct((currentCartProduct) => ({
+        ...currentCartProduct,
+        quantity: currentCartProduct.quantity === 1 ? 1 : --currentCartProduct.quantity
+      }));
+    }
+  }
+
   return (
     <ShopLayout
       title={product.title}
@@ -45,7 +59,11 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
             <Typography variant='subtitle1' component='h2'>${product.price}</Typography>
             <Box sx={{my: 2}}>
               <Typography variant='subtitle2'>Cantidad</Typography>
-              <ItemCounter />
+              <ItemCounter
+                quantity={tempCartProduct.quantity}
+                onUpdateQuantity={onUpdateQuantity}
+                disabled={product.inStock === 0}
+              />
               <SizeSelector
                 sizes={product.sizes}
                 selectedSize={tempCartProduct.size}
