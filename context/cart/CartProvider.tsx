@@ -1,4 +1,5 @@
-import { FC, PropsWithChildren, useReducer } from 'react';
+import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
+import Cookie from 'js-cookie';
 
 import { ICartProduct } from '../../interfaces';
 import { CartContext } from './CartContext';
@@ -6,14 +7,38 @@ import { cartReducer } from './cartReducer';
 
 export interface CartState {
   cart: ICartProduct[];
+  loaded: boolean;
 }
 
 const CART_INITIAL_STATE: CartState = {
-  cart: []
+  cart: [],
+  loaded: false
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
+
+  useEffect(() => {
+    try {
+      const cartCookie = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [] ;
+      dispatch({
+        type: 'Cart - Load Cart',
+        payload: cartCookie
+      });
+    } catch (error) {
+      dispatch({
+        type: 'Cart - Load Cart',
+        payload: []
+      });
+    }
+  }, []);
+  
+
+  useEffect(() => {
+    if (state.loaded)
+      Cookie.set('cart', JSON.stringify(state.cart))
+  }, [state.loaded, state.cart])
+  
 
   const onAddProductToCart = (product: ICartProduct) => {
     const productInCart = state.cart.some((_product) => _product._id === product._id && _product.size === product.size);

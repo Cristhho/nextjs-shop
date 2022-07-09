@@ -9,7 +9,9 @@ export const cartReducer = (state: CartState, action: UIActionType): CartState =
   switch (action.type) {
     case 'Cart - Load Cart':
       return {
-        ...state
+        ...state,
+        cart: action.payload,
+        loaded: true
       }
     case 'Cart - Add Product':
       return {
