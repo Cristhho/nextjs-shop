@@ -32,14 +32,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       });
     }
   }, []);
-  
 
   useEffect(() => {
     if (state.loaded)
       Cookie.set('cart', JSON.stringify(state.cart))
   }, [state.loaded, state.cart])
   
-
   const onAddProductToCart = (product: ICartProduct) => {
     const productInCart = state.cart.some((_product) => _product._id === product._id && _product.size === product.size);
     if (!productInCart) return dispatch({ type: 'Cart - Add Product', payload: [...state.cart, product] });
@@ -57,10 +55,26 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   }
 
+  const updateCartQuantity = (product: ICartProduct) => {
+    dispatch({
+      type: 'Cart - Change Product qty',
+      payload: product
+    });
+  }
+
+  const removeCartProduct = (product: ICartProduct) => {
+    dispatch({
+      type: 'Cart - Remove Product',
+      payload: product
+    });
+  }
+
   return (
     <CartContext.Provider value={{
       ...state,
-      onAddProductToCart
+      onAddProductToCart,
+      updateCartQuantity,
+      removeCartProduct
     }}>
       {children}
     </CartContext.Provider>
