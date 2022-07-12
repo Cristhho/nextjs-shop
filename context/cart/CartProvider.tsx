@@ -8,11 +8,19 @@ import { cartReducer } from './cartReducer';
 export interface CartState {
   cart: ICartProduct[];
   loaded: boolean;
+  numberOfItems: number;
+  subTotal: number;
+  tax: number;
+  total: number;
 }
 
 const CART_INITIAL_STATE: CartState = {
   cart: [],
-  loaded: false
+  loaded: false,
+  numberOfItems: 0,
+  subTotal: 0,
+  tax: 0,
+  total: 0
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -37,6 +45,22 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     if (state.loaded)
       Cookie.set('cart', JSON.stringify(state.cart))
   }, [state.loaded, state.cart])
+
+  useEffect(() => {
+    const subTotal = state.cart.reduce((prev, current) => prev + (current.price * current.quantity), 0);
+    const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
+    const orderSummary = {
+      numberOfItems: state.cart.reduce((prev, current) => prev + current.quantity, 0),
+      subTotal,
+      tax: subTotal * taxRate,
+      total: subTotal * (1 + taxRate)
+    }
+    dispatch({
+      type: 'Cart - Update Summary',
+      payload: orderSummary
+    });
+  }, [state.cart])
+  
   
   const onAddProductToCart = (product: ICartProduct) => {
     const productInCart = state.cart.some((_product) => _product._id === product._id && _product.size === product.size);

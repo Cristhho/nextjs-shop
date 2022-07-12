@@ -1,11 +1,19 @@
 import { ICartProduct } from '../../interfaces';
 import { CartState } from './CartProvider';
 
+type Summary = {
+  numberOfItems: number,
+  subTotal: number,
+  tax: number,
+  total: number
+}
+
 type UIActionType =
 |{ type: 'Cart - Load Cart', payload: ICartProduct[] }
 |{ type: 'Cart - Add Product', payload: ICartProduct[] }
 |{ type: 'Cart - Change Product qty', payload: ICartProduct }
 |{ type: 'Cart - Remove Product', payload: ICartProduct }
+|{ type: 'Cart - Update Summary', payload: Summary }
 
 export const cartReducer = (state: CartState, action: UIActionType): CartState => {
   switch (action.type) {
@@ -38,6 +46,11 @@ export const cartReducer = (state: CartState, action: UIActionType): CartState =
           else if(product.size !== action.payload.size) return true;
           return false;
         })
+      }
+    case 'Cart - Update Summary':
+      return {
+        ...state,
+        ...action.payload
       }
     default:
       return state;
