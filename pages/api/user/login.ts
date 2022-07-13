@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import { db } from '../../../database';
 import { User } from '../../../models';
+import { JWT } from '../../../utils';
 
 type Data =
 | { message:string }
@@ -33,8 +34,10 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: 'Correo o contraseña no válidos' });
   }
 
+  const token = JWT.signToken(user._id, user.email);
+
   return res.status(200).json({
-    token: '',
+    token,
     user: {
       email: user.email,
       role: user.role,
