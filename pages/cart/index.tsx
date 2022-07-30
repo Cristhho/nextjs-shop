@@ -7,7 +7,7 @@ import { CartList, OrderSummary } from '../../components/cart';
 const CartPage: NextPage = () => {
   return (
     <ShopLayout
-      title='Carrito - 3'
+      title='Carrito'
       pageDescription='Carrito de compras'
     >
       <Typography variant='h1' component='h1'>Carrito</Typography>
