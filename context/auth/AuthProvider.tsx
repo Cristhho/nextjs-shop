@@ -9,16 +9,35 @@ import { tesloApi } from '../../api';
 
 export interface AuthState {
   isLoggedIn: boolean;
+  loaded: boolean;
   user?: IUser;
 }
 
 const CART_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
+  loaded: false,
   user: undefined
 }
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, CART_INITIAL_STATE);
+
+  useEffect(() => {
+    if (!state.loaded) {
+      checkToken();
+    }
+  }, [state.loaded]);
+  
+  const checkToken = async () => {
+    try {
+      const { data } = await tesloApi.get('/user/validate-token');
+      const { token, user } = data;
+      Cookies.set('token', token);
+      dispatch({type: '[Auth] - Login', payload: user});
+    } catch (error) {
+      Cookies.remove('token');
+    }
+  }
 
   const loginUser = async (email: string, password: string): Promise<boolean> => {
     try {
