@@ -88,7 +88,7 @@ const LoginPage: NextPage = () => {
               <Button type='submit' color='secondary' className='circular-btn' size='large' fullWidth>Ingresar</Button>
             </Grid>
             <Grid item xs={12} sx={{textAlign: 'right'}}>
-              <NextLink href='/auth/register' passHref>
+              <NextLink href={`/auth/register?p=${router.query.p?.toString() || '/'}`} passHref>
                 <Link underline='always'>¿No tienes cuenta?</Link>
               </NextLink>
             </Grid>

@@ -35,7 +35,8 @@ const RegisterPage: NextPage = () => {
       }, 3000);
       return;
     }
-    router.replace('/');
+    const destination = router.query.p?.toString() || '/';
+    router.replace(destination);
   }
 
   return (
@@ -106,7 +107,7 @@ const RegisterPage: NextPage = () => {
               <Button type='submit' color='secondary' className='circular-btn' size='large' fullWidth>Ingresar</Button>
             </Grid>
             <Grid item xs={12} sx={{textAlign: 'right'}}>
-              <NextLink href='/auth/login' passHref>
+              <NextLink href={`/auth/login?p=${router.query.p?.toString() || '/'}`} passHref>
                 <Link underline='always'>¿Ya tienes cuenta?</Link>
               </NextLink>
             </Grid>
