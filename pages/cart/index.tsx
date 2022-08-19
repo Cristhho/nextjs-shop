@@ -1,10 +1,24 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { useContext, useEffect } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
+import { CartContext } from '../../context';
 
 const CartPage: NextPage = () => {
+  const { loaded, cart } = useContext(CartContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loaded && cart.length === 0) {
+      router.replace('/cart/empty');
+    }
+  }, [loaded, cart, router]);
+  
+  if (!loaded || cart.length === 0) return <></>;
+
   return (
     <ShopLayout
       title='Carrito'
