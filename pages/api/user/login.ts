@@ -34,7 +34,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: 'Correo o contraseña no válidos' });
   }
 
-  const token = JWT.signToken(user._id, user.email);
+  const token = await JWT.signToken(user._id, user.email);
 
   return res.status(200).json({
     token,

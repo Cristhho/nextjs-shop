@@ -1,11 +1,17 @@
-import jwt from 'jsonwebtoken';
+import {SignJWT, jwtVerify, type JWTPayload} from 'jose';
 
-export const signToken = (_id: string, email: string) => {
+export const signToken = async (_id: string, email: string) => {
   if (!process.env.JWT_SECRET_SEED) {
     throw new Error('No hay jwt secret');
   }
 
-  return jwt.sign({_id, email}, process.env.JWT_SECRET_SEED, {expiresIn: '30d'});
+  const jwt = await new SignJWT({_id, email})
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('30d')
+    .setIssuedAt()
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET_SEED));
+  
+  return jwt;
 }
 
 export const isValidToken = (token: string): Promise<string> => {
@@ -13,14 +19,11 @@ export const isValidToken = (token: string): Promise<string> => {
     throw new Error('No hay jwt secret');
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      jwt.verify(token, process.env.JWT_SECRET_SEED || '', (err, payload) => {
-        if (err) return reject('JWT no es válido');
-
-        const { _id } = payload as {_id: string};
-        resolve(_id);
-      });
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET_SEED));
+      const { _id } = payload as {_id: string};
+      resolve(_id);
     } catch (error) {
       reject('JWT no es válido');
     }

@@ -53,7 +53,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     return res.status(500).json({ message: 'Error del servidor' });
   }
 
-  const token = JWT.signToken(newUser._id, email);
+  const token = await JWT.signToken(newUser._id, email);
 
   return res.status(200).json({
     token,
