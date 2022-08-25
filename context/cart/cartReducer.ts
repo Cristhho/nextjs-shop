@@ -1,4 +1,4 @@
-import { ICartProduct } from '../../interfaces';
+import { IAddress, ICartProduct } from '../../interfaces';
 import { CartState } from './CartProvider';
 
 type Summary = {
@@ -14,6 +14,8 @@ type UIActionType =
 |{ type: 'Cart - Change Product qty', payload: ICartProduct }
 |{ type: 'Cart - Remove Product', payload: ICartProduct }
 |{ type: 'Cart - Update Summary', payload: Summary }
+|{ type: 'Cart - Load Address', payload?: IAddress }
+|{ type: 'Cart - Update Address', payload?: IAddress }
 
 export const cartReducer = (state: CartState, action: UIActionType): CartState => {
   switch (action.type) {
@@ -51,6 +53,12 @@ export const cartReducer = (state: CartState, action: UIActionType): CartState =
       return {
         ...state,
         ...action.payload
+      }
+    case 'Cart - Update Address':
+    case 'Cart - Load Address':
+      return {
+        ...state,
+        shippingAddress: action.payload
       }
     default:
       return state;

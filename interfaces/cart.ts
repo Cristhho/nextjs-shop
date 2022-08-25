@@ -10,3 +10,14 @@ export interface ICartProduct {
   gender: 'men'|'women'|'kid'|'unisex',
   quantity: number;
 }
+
+export interface IAddress {
+  name: string;
+  lastname: string;
+  address: string;
+  address2: string;
+  zip: string;
+  city: string;
+  country: string;
+  phone: string;
+}

@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import Cookie from 'js-cookie';
 
-import { ICartProduct } from '../../interfaces';
+import { IAddress, ICartProduct } from '../../interfaces';
 import { CartContext } from './CartContext';
 import { cartReducer } from './cartReducer';
 
@@ -12,6 +12,7 @@ export interface CartState {
   subTotal: number;
   tax: number;
   total: number;
+  shippingAddress?: IAddress;
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -20,7 +21,8 @@ const CART_INITIAL_STATE: CartState = {
   numberOfItems: 0,
   subTotal: 0,
   tax: 0,
-  total: 0
+  total: 0,
+  shippingAddress: undefined
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -42,9 +44,24 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    try {
+      const addressCookie = Cookie.get('address') ? JSON.parse(Cookie.get('address')!) : undefined ;
+      dispatch({
+        type: 'Cart - Load Address',
+        payload: addressCookie
+      });
+    } catch (error) {
+      dispatch({
+        type: 'Cart - Load Address',
+        payload: undefined
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (state.loaded)
       Cookie.set('cart', JSON.stringify(state.cart))
-  }, [state.loaded, state.cart])
+  }, [state.loaded, state.cart]);
 
   useEffect(() => {
     const subTotal = state.cart.reduce((prev, current) => prev + (current.price * current.quantity), 0);
@@ -93,12 +110,21 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   }
 
+  const updateAddress = (address: IAddress) => {
+    Cookie.set('address', JSON.stringify(address));
+    dispatch({
+      type: 'Cart - Update Address',
+      payload: address
+    });
+  }
+
   return (
     <CartContext.Provider value={{
       ...state,
       onAddProductToCart,
       updateCartQuantity,
-      removeCartProduct
+      removeCartProduct,
+      updateAddress
     }}>
       {children}
     </CartContext.Provider>

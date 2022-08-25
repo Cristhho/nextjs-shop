@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, Grid, MenuItem, TextField, Typography } from '@mui/material';
@@ -7,27 +7,19 @@ import Cookies from 'js-cookie';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
 import { countries } from '../../utils';
+import { IAddress } from '../../interfaces';
+import { CartContext } from '../../context';
 
-type FormData = {
-  name: string,
-  lastname: string,
-  address: string,
-  address2: string,
-  zip: string,
-  city: string,
-  country: string,
-  phone: string
-}
-
-const getAddressFromCookie = (): FormData => {
+const getAddressFromCookie = (): IAddress => {
   const addressCookie = Cookies.get('address') ? JSON.parse(Cookies.get('address')!) : {};
   return addressCookie;
 }
 
 const AddressPage: NextPage = () => {
   const [loaded, setLoaded] = useState(false);
+  const { updateAddress } = useContext(CartContext);
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<IAddress>({
     defaultValues: getAddressFromCookie()
   });
 
@@ -36,8 +28,8 @@ const AddressPage: NextPage = () => {
   }, []);
   
 
-  const onSubmitAddress = (data: FormData) => {
-    Cookies.set('address', JSON.stringify(data));
+  const onSubmitAddress = (data: IAddress) => {
+    updateAddress(data);
     router.push('/checkout/summary');
   }
 
@@ -144,7 +136,7 @@ const AddressPage: NextPage = () => {
               select
               variant='filled'
               label='pais'
-              defaultValue={ JSON.parse(Cookies.get('address') || '{}').country || countries[0].code }
+              defaultValue={ getAddressFromCookie().country || countries[0].code }
               {...register('country' , {
                 required: 'Este campo es requerido',
               })}
