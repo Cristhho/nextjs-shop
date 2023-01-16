@@ -35,7 +35,7 @@ export default NextAuth({
         if (account.type === 'credentials') {
           token.user = user;
         } else if (account.type === 'oauth') {
-
+          token.user = await dbUsers.oAuthToDB(user?.email || '', user?.name || '');
         }
       }
       return token;
