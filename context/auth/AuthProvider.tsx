@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -22,13 +23,22 @@ const CART_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, CART_INITIAL_STATE);
+  const { data, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
+    if (status === 'authenticated') {
+      console.log(data.user);
+      //TODO: dispatch({ type: '[Auth] - Login', payload: data.user as IUser });
+    }
+  }, [status, data]);
+  
+
+  /*useEffect(() => {
     if (!state.loaded) {
       checkToken();
     }
-  }, [state.loaded]);
+  }, [state.loaded]);*/
   
   const checkToken = async () => {
     if (!Cookies.get('token')) return;
