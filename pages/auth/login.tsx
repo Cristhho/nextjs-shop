@@ -1,15 +1,14 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { getSession, signIn } from 'next-auth/react';
-import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
+import { getProviders, getSession, signIn } from 'next-auth/react';
+import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from '../../components/layouts';
 import { Validations } from '../../utils';
-import { AuthContext } from '../../context';
 
 type FormData = {
   email: string,
@@ -18,9 +17,16 @@ type FormData = {
 
 const LoginPage: NextPage = () => {
   const [showError, setShowError] = useState<boolean>(false);
-  const { loginUser } = useContext(AuthContext);
+  const [providers, setProviders] = useState<any>({});
   const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+  useEffect(() => {
+    getProviders().then((prov) => {
+      setProviders(prov);
+    });
+  }, []);
+  
 
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false);
@@ -92,6 +98,26 @@ const LoginPage: NextPage = () => {
               <NextLink href={`/auth/register?p=${router.query.p?.toString() || '/'}`} passHref>
                 <Link underline='always'>¿No tienes cuenta?</Link>
               </NextLink>
+            </Grid>
+            <Grid item xs={12} display='flex' flexDirection='column' justifyContent='flex-end'>
+              <Divider sx={{ width: '100%', mb: 2 }} />
+              {
+                Object.values(providers).map((prov: any) => {
+                  if (prov.id === 'credentials') return null;
+                  return (
+                    <Button
+                      key={prov.id}
+                      variant='outlined'
+                      fullWidth
+                      color='primary'
+                      sx={{ mb: 1 }}
+                      onClick={() => signIn(prov.id)}
+                    >
+                      {prov.name}
+                    </Button>
+                  );
+                })
+              }
             </Grid>
           </Grid>
         </Box>
