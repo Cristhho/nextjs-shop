@@ -10,7 +10,7 @@ import { CartList, OrderSummary } from '../../components/cart';
 import { CartContext } from '../../context';
 
 const SummaryPage: NextPage = () => {
-  const { shippingAddress, numberOfItems } = useContext(CartContext);
+  const { shippingAddress, numberOfItems, createOrder } = useContext(CartContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,6 +21,10 @@ const SummaryPage: NextPage = () => {
 
   if (!shippingAddress) {
     return <div></div>;
+  }
+
+  const onCreateOrder = () => {
+    createOrder();
   }
 
   return (
@@ -57,7 +61,7 @@ const SummaryPage: NextPage = () => {
               </Box>
               <OrderSummary />
               <Box sx={{mt: 3}} display='flex' flexDirection='column'>
-                <Button color='secondary' className='circular-btn'>Confirmar Orden</Button>
+                <Button color='secondary' className='circular-btn' onClick={onCreateOrder}>Confirmar Orden</Button>
               </Box>
             </CardContent>
           </Card>

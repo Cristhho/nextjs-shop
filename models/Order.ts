@@ -11,7 +11,8 @@ const orderSchema = new Schema({
     quantity: { type: Number, require: true },
     slug: { type: String, require: true },
     image: { type: String, require: true },
-    price: { type: Number, require: true }
+    price: { type: Number, require: true },
+    gender: { type: String, require: true },
   }],
   shippingAddress: {
     name: { type: String, require: true },
