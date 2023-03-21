@@ -91,6 +91,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     /*Cookies.remove('token');
     router.reload();*/
     Cookies.remove('cart');
+    Cookies.remove('address');
     signOut();
   }
 
