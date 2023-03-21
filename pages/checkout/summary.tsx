@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Divider, Grid, Link, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
 
 import ShopLayout from '../../components/layouts/ShopLayout';
@@ -10,6 +10,8 @@ import { CartList, OrderSummary } from '../../components/cart';
 import { CartContext } from '../../context';
 
 const SummaryPage: NextPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { shippingAddress, numberOfItems, createOrder } = useContext(CartContext);
   const router = useRouter();
 
@@ -23,8 +25,17 @@ const SummaryPage: NextPage = () => {
     return <div></div>;
   }
 
-  const onCreateOrder = () => {
-    createOrder();
+  const onCreateOrder = async() => {
+    setLoading(true);
+    const {hasError, message} = await createOrder();
+
+    if (hasError) {
+      setLoading(false);
+      setError(message);
+      return;
+    }
+
+    router.replace(`/orders/${message}`);
   }
 
   return (
@@ -61,7 +72,8 @@ const SummaryPage: NextPage = () => {
               </Box>
               <OrderSummary />
               <Box sx={{mt: 3}} display='flex' flexDirection='column'>
-                <Button color='secondary' className='circular-btn' onClick={onCreateOrder}>Confirmar Orden</Button>
+                <Button color='secondary' className='circular-btn' disabled={loading} onClick={onCreateOrder}>Confirmar Orden</Button>
+                <Chip color='error' label={error} sx={{ display: error ? 'flex' : 'none', mt: 2 }} />
               </Box>
             </CardContent>
           </Card>

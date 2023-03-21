@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
+import axios, {AxiosError} from 'axios';
 import Cookie from 'js-cookie';
 
 import { IAddress, ICartProduct, IOrder } from '../../interfaces';
@@ -119,7 +120,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   }
 
-  const createOrder = async() => {
+  const createOrder = async(): Promise<{hasError: boolean, message: string}> => {
     if (!state.shippingAddress) {
       throw new Error('No hay dirección de entrega');
     }
@@ -137,10 +138,24 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       isPaid: false
     };
     try {
-      const {data} = await tesloApi.post('/orders', body)
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+      const {data} = await tesloApi.post<IOrder>('/orders', body)
+      dispatch({type: 'Cart - Order complete'});
+      return {
+        hasError: false,
+        message: data._id!
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        const $error: AxiosError<any, any> = error;
+        return {
+          hasError: true,
+          message: $error.response?.data.message
+        }
+      }
+      return {
+        hasError: true,
+        message: 'Error inesperado. Intente de nuevo.'
+      }
     }
   }
 
