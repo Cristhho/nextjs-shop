@@ -4,13 +4,14 @@ import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '
 
 import { ItemCounter } from '../ui';
 import { CartContext } from '../../context';
-import { ICartProduct } from '../../interfaces';
+import { ICartProduct, IOrderItem } from '../../interfaces';
 
 type CartListProps = {
-  editable?: boolean
+  editable?: boolean,
+  products?: IOrderItem[]
 }
 
-export const CartList: FC<CartListProps> = ({ editable = false }) => {
+export const CartList: FC<CartListProps> = ({ editable = false, products }) => {
   const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
 
   const onNewCartQuantity = (product: ICartProduct, adding: boolean) => {
@@ -19,10 +20,12 @@ export const CartList: FC<CartListProps> = ({ editable = false }) => {
     updateCartQuantity(product);
   }
 
+  const productsToShow = products ? products : cart;
+
   return (
     <>
       {
-        cart.map((product) => (
+        productsToShow.map((product) => (
           <Grid key={product.slug + product.size} container spacing={2} sx={{mb: 1}}>
             <Grid item xs={3}>
               <NextLink href={`/product/${product.slug}`} passHref>
@@ -43,7 +46,7 @@ export const CartList: FC<CartListProps> = ({ editable = false }) => {
                 <Typography variant='body1'>Talla: <b>{product.size}</b></Typography>
                 {
                   editable
-                  ? <ItemCounter quantity={product.quantity} onUpdateQuantity={(adding) => onNewCartQuantity(product, adding)} />
+                  ? <ItemCounter quantity={product.quantity} onUpdateQuantity={(adding) => onNewCartQuantity(product as ICartProduct, adding)} />
                   : <Typography variant='h5'>{product.quantity} {product.quantity > 1 ? 'productos' : 'producto'}</Typography>
                 }
               </Box>
@@ -52,7 +55,7 @@ export const CartList: FC<CartListProps> = ({ editable = false }) => {
               <Typography variant='subtitle1'>{`$${product.price * product.quantity}`}</Typography>
               {
                 editable && (
-                  <Button variant='text' color='error' onClick={() => removeCartProduct(product)}>Remover</Button>
+                  <Button variant='text' color='error' onClick={() => removeCartProduct(product as ICartProduct)}>Remover</Button>
                 )
               }
             </Grid>
