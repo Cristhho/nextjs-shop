@@ -63,7 +63,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     await db.disconnect();
     return res.status(401).json({ message: 'Orden no existe en base' });
   }
-  if (dbOrder.user !== session.user._id) {
+  if (dbOrder.user != session.user._id) {
     await db.disconnect();
     return res.status(401).json({ message: 'Orden no pertenece a su usuario' });
   }
@@ -73,17 +73,18 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ message: 'No se pudo generar el token de paypal' });
   }
 
-  const { data } = await axios.get<Paypal.PaypalOrderStatusResponse>(`${process.env.PAYPAL_OAUTH_URL}/` || '', {
+  const { data } = await axios.get<Paypal.PaypalOrderStatusResponse>(`${process.env.PAYPAL_ORDERS_URL}/${transactionid}` || '', {
     headers: {
       'Authorization': `Bearer ${paypalToken}`
     }
   });
+  console.log(data);
 
   if (data.status !== 'COMPLETED') {
     return res.status(401).json({ message: 'Orden no encontrada' });
   }
 
-  if (dbOrder.total !== +data.purchase_units[0].amount) {
+  if (dbOrder.total !== +data.purchase_units[0].amount.value) {
     await db.disconnect();
     return res.status(401).json({ message: 'Los montos no son iguales' });
   }
