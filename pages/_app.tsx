@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SWRConfig } from 'swr';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 import { lightTheme } from '../themes';
 import { AuthProvider, CartProvider, UiProvider } from '../context';
@@ -20,7 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             <UiProvider>
               <ThemeProvider theme={lightTheme}>
                 <CssBaseline />
-                <Component {...pageProps} />
+                <PayPalScriptProvider options={{
+                  'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''
+                }}>
+                  <Component {...pageProps} />
+                </PayPalScriptProvider>
               </ThemeProvider>
             </UiProvider>
           </CartProvider>
