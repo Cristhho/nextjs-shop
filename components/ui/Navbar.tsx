@@ -29,7 +29,7 @@ const Navbar = () => {
           </Link>
         </NextLink>
         <Box flex={1} />
-        <Box sx={{
+        <Box role='navigation' sx={{
           display: isSearchVisible ? 'none' : {
             xs: 'none',
             sm: 'block'
@@ -83,6 +83,7 @@ const Navbar = () => {
           :
             <IconButton
               className='fadeIn'
+              aria-label='Search'
               sx={{
                 display: {
                   xs: 'none',
