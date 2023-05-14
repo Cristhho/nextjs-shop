@@ -1,37 +1,35 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { db, SHOP_CONSTANTS } from '../../../database';
-import { IProduct } from '../../../interfaces';
-import { Product } from '../../../models';
+import { Product } from '@/domain/model';
+import { ProductRepository } from '@/domain/repository';
+import { GetProductsUseCase } from '@/domain/useCase';
+import { MongoProductDataSource } from '@/data/dataSource/db/MongoProductDataSource';
+import { ProductRepositoryImpl } from '@/data/repository/ProductRepositoryImpl';
 
 type Data =
 | { message: string }
-| IProduct[];
+| Product[];
 
 const handler = async (req:NextApiRequest, res:NextApiResponse<Data>) => {
+  const mongoProductDataSource = new MongoProductDataSource();
+  const productRepository = new ProductRepositoryImpl(mongoProductDataSource);
   switch (req.method) {
     case 'GET':
-      return getProducts(req, res);
+      const { gender = 'all' } = req.query;
+      const data = await getProducts(productRepository, gender.toString());
+      return res.status(200).json(data);
   
     default:
       return res.status(400).json({ message: 'Bad request' });
   }
 };
 
-const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { gender = 'all' } = req.query;
-  let condition = {};
-  if (gender !== 'all' && SHOP_CONSTANTS.validGenders.includes(`${gender}`)) {
-    condition = { gender }
-  }
-  await db.connect();
+export const getProducts = async (productRepository: ProductRepository, gender: string) => {
+  const getProductsUseCase = new GetProductsUseCase(productRepository);
 
-  const products = await Product.find(condition)
-    .select('images inStock title slug price -_id').lean();
+  const products = await getProductsUseCase.excecute(gender);
 
-  await db.disconnect();
-
-  return res.status(200).json(products);
+  return products;
 }
 
 export default handler;

@@ -1,13 +1,21 @@
+import { useEffect } from 'react';
 import type { NextPage } from 'next';
 import { Typography } from '@mui/material';
 
 import ShopLayout from '../components/layouts/ShopLayout';
 import { ProductsList } from '../components/products';
 import { FullScreenLoading } from '../components/ui';
-import { useProducts } from '../hooks';
+import { useProductListViewModel } from 'viewmodel/ProductListViewModel';
+import { ProductRepositoryImpl } from '@/data/repository/ProductRepositoryImpl';
+import { ProducApiDataSource } from '@/data/dataSource/api/ProducApiDataSource';
 
+const productRepository = new ProductRepositoryImpl(new ProducApiDataSource());
 const Home: NextPage = () => {
-  const { products, isLoading } = useProducts('/products');
+  const { getProducts, products, isLoading } = useProductListViewModel(productRepository);
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
 
   return (
     <ShopLayout
@@ -26,4 +34,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Home;

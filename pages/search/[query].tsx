@@ -1,10 +1,14 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import { Box, Typography } from '@mui/material';
 
+import { MongoProductDataSource } from '@/data/dataSource/db/MongoProductDataSource';
+import { ProductRepositoryImpl } from '@/data/repository/ProductRepositoryImpl';
+
 import ShopLayout from '../../components/layouts/ShopLayout';
 import { ProductsList } from '../../components/products';
 import { dbProducts } from '../../database';
 import { IProduct } from '../../interfaces';
+import { getProducts } from '../api/products';
 
 interface SearchPageProps {
   products: IProduct[];
@@ -40,6 +44,8 @@ const SearchPage: NextPage<SearchPageProps> = ({ products, existProducts, query 
 }
 
 export const getServerSideProps:GetServerSideProps = async ({ params }) => {
+  const mongoProductDataSource = new MongoProductDataSource();
+  const productRepository = new ProductRepositoryImpl(mongoProductDataSource);
   const { query='' } = params as {query: string};
 
   if (query.length === 0) {
@@ -55,7 +61,7 @@ export const getServerSideProps:GetServerSideProps = async ({ params }) => {
   const existProducts = products.length > 0;
 
   if (!existProducts) {
-    products = await dbProducts.getAllProducts();
+    products = await getProducts(productRepository, 'all');
   }
 
   return {
