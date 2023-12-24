@@ -17,9 +17,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: teslo-app
+    restart: always
     ports:
-      - 3000:3000
+      - 5000:3000
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./public:/app/public
     depends_on:
       - postgres-db
