@@ -16,6 +16,7 @@ type ValidTypes = 'shirts'|'pants'|'hoodies'|'hats';
 
 interface SeedData {
     products: SeedProduct[],
+    categories: ValidTypes[]
 }
 
 
@@ -805,5 +806,6 @@ export const initialData: SeedData = {
             title: "Kids Corp Jacket",
             gender: 'kid'
         },
-    ]
+    ],
+    categories: ['shirts', 'pants', 'hoodies', 'hats']
 }
