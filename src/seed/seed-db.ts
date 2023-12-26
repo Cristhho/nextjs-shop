@@ -1,39 +1,25 @@
-import { initialData } from "./seed";
 import prisma from "../lib/prisma";
+import { CategoryRepositoryImpl, ProductRepositoryImpl } from "../data/repository";
+import { PrismaCategoryDataSource, PrismaProductDataSource, ProductInMemory } from "../data/dataSource";
+import { GetProductsUseCase } from "../domain/useCase";
+
+const memoryProductRepository = new ProductRepositoryImpl(new ProductInMemory());
+const prismaCategoryRespository = new CategoryRepositoryImpl(new PrismaCategoryDataSource());
+const prismaProductRepository = new ProductRepositoryImpl(new PrismaProductDataSource(prismaCategoryRespository));
+const getMemoryProducts = new GetProductsUseCase(memoryProductRepository);
 
 async function main() {
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
-  const { categories, products } = initialData;
+  const categories = ['shirts', 'pants', 'hoodies', 'hats'];
+  const products = await getMemoryProducts.execute();
   await prisma.category.createMany({
     data: categories.map((name) => ({ name }))
   });
 
-  const categoriesDB = await prisma.category.findMany();
-  const categoriesMap = categoriesDB.reduce((map, category) => {
-    map[category.name.toLowerCase()] = category.id
-    return map;
-  }, {} as Record<string, string>);
-
-  products.forEach(async (product) => {
-    const {images, type, ...$product} = product;
-    const dbProduct = await prisma.product.create({
-      data: {
-        ...$product,
-        categoryId: categoriesMap[type.toLowerCase()]
-      }
-    });
-    const $images = images.map((image) => ({
-      url: image,
-      productId: dbProduct.id
-    }));
-
-    await prisma.productImage.createMany({
-      data: $images
-    })
-  })
+  await prismaProductRepository.saveMany(products)
 
   console.log("seed executed. Check database!!");
 }
