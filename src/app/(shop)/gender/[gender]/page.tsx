@@ -1,32 +1,43 @@
-export const revalidate = 60;
-import { redirect } from 'next/navigation';
-
 import { Pagination, ProductGrid, Title } from '@/components';
 import { PrismaProductDataSource } from '@/data/dataSource';
 import { ProductRepositoryImpl } from '@/data/repository';
+import { Gender } from '@/domain/model';
 import { GetPaginatedProductsUseCase } from '@/domain/useCase';
+import { notFound } from 'next/navigation';
+
 
 interface Props {
   searchParams: {
     page?: string; 
+  },
+  params: {
+    gender: Gender;
   }
 }
 
 const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
 const productsUseCase = new GetPaginatedProductsUseCase(productsRepository)
-
-export default async function Home({ searchParams }: Props) {
+export default async function GenderPage({ params, searchParams }: Props) {
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
-  const { items: products, totalPages } = await productsUseCase.execute({ page })
+  const { gender } = params;
+  const { items: products, totalPages } = await productsUseCase.execute({ page, gender, take: 6 })
 
-  if ( products.length === 0 ) {
-    redirect('/');
+  const labels: Record<Gender, string>  = {
+    'men': 'para hombres',
+    'women': 'para mujeres',
+    'kid': 'para niños',
+    'unisex': 'para todos'
   }
+
+  // if ( id === 'kids' ) {
+  //   notFound();
+  // }
+
 
   return (
     <>
       <Title
-        title="Tienda"
+        title={`Artículos de ${ labels[gender] }`}
         subtitle="Todos los productos"
         className="mb-2"
       />
