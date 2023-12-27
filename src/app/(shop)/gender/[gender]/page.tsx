@@ -1,9 +1,10 @@
+export const revalidate = 60;
+
 import { Pagination, ProductGrid, Title } from '@/components';
 import { PrismaProductDataSource } from '@/data/dataSource';
 import { ProductRepositoryImpl } from '@/data/repository';
 import { Gender } from '@/domain/model';
 import { GetPaginatedProductsUseCase } from '@/domain/useCase';
-import { notFound } from 'next/navigation';
 
 
 interface Props {
