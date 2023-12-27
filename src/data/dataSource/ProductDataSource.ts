@@ -5,4 +5,5 @@ export interface ProductDataSource {
   getAllProducts(): Promise<Product[]>;
   createManyProducts(products: Product[]): Promise<boolean>;
   getWithPagination(options: ProductsPaginationOptions): Promise<PaginationResponse<Product>>;
+  getBySlug(slug: string): Promise<Product|null>;
 }

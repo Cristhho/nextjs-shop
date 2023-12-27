@@ -1,8 +1,11 @@
+export const revalidate = 604800;
 import { notFound } from 'next/navigation';
 
-import { initialData } from '@/seed/seed';
 import { titleFont } from '@/config/fonts';
 import { ProductMobileSlideshow, ProductSlideshow, QuantitySelector, SizeSelector } from '@/components';
+import { PrismaProductDataSource } from '@/data/dataSource';
+import { ProductRepositoryImpl } from '@/data/repository';
+import { GetProductBySlugUseCase } from '@/domain/useCase';
 
 interface Props {
   params: {
@@ -10,12 +13,12 @@ interface Props {
   };
 }
 
-
-
-export default function ProductPage( { params }: Props ) {
+const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
+const productBySlug = new GetProductBySlugUseCase(productsRepository)
+export default async function ProductPage( { params }: Props ) {
 
   const { slug } = params;
-  const product = initialData.products.find( product => product.slug === slug );
+  const product = await productBySlug.execute(slug)
 
   if ( !product ) {
     notFound();

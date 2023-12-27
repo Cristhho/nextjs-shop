@@ -23,4 +23,8 @@ export class ProductRepositoryImpl implements ProductRepository {
     if (page < 1) page = 1;
     return this.dataSource.getWithPagination({ page, take, gender })
   }
+
+  getBySlug(slug: string): Promise<Product|null> {
+    return this.dataSource.getBySlug(slug)
+  }
 }

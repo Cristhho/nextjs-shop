@@ -93,6 +93,29 @@ export class PrismaProductDataSource implements ProductDataSource {
     }
   }
 
+  async getBySlug(slug: string) {
+    try {
+      const product = await prisma.product.findUnique({
+        include: {
+          ProductImage: {
+            take: 2,
+            select: {
+              url: true
+            }
+          }
+        },
+        where: {
+          slug
+        }
+      })
+      if (!product) return null;
+
+      return this.mapToDomain(product)
+    } catch (error) {
+      throw new Error("Couldn\'t load products");
+    }
+  }
+
   private mapToDomain(product: DBProduct): Product {
     return {
       ...product,
