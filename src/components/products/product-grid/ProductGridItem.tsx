@@ -1,10 +1,11 @@
 'use client';
 
 
+import { Product } from '@/domain/model';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Product } from '@/interfaces';
+
 import { useState } from 'react';
 
 interface Props {

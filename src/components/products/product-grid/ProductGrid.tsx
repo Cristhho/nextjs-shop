@@ -1,4 +1,4 @@
-import { Product } from '@/interfaces';
+import { Product } from '@/domain/model';
 import { ProductGridItem } from './ProductGridItem';
 
 interface Props {

@@ -1,6 +1,8 @@
-import { Product } from '@/domain/model';
+import { PaginationResponse, Product } from '@/domain/model';
+import { ProductsPaginationOptions } from './prisma/interfaces/PaginationOptions';
 
 export interface ProductDataSource {
   getAllProducts(): Promise<Product[]>;
   createManyProducts(products: Product[]): Promise<boolean>;
+  getWithPagination(options: ProductsPaginationOptions): Promise<PaginationResponse<Product>>;
 }
