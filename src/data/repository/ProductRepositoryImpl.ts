@@ -27,4 +27,8 @@ export class ProductRepositoryImpl implements ProductRepository {
   getBySlug(slug: string): Promise<Product|null> {
     return this.dataSource.getBySlug(slug)
   }
+
+  getProductStock(slug: string): Promise<number> {
+    return this.dataSource.getStock(slug)
+  }
 }

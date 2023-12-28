@@ -5,4 +5,5 @@ export interface ProductRepository {
   saveMany(products: Product[]): Promise<boolean>;
   getWithPagination(options: PaginationOptions): Promise<PaginationResponse<Product>>
   getBySlug(slug: string): Promise<Product|null>;
+  getProductStock(slug: string): Promise<number>;
 }

@@ -702,4 +702,8 @@ export class ProductInMemory implements ProductDataSource {
   getBySlug(slug: string): Promise<Product> {
     throw new Error("Method not implemented.");
   }
+
+  getStock(slug: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
 }

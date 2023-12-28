@@ -94,6 +94,7 @@ export class PrismaProductDataSource implements ProductDataSource {
   }
 
   async getBySlug(slug: string) {
+    'use server'
     try {
       const product = await prisma.product.findUnique({
         include: {
@@ -113,6 +114,24 @@ export class PrismaProductDataSource implements ProductDataSource {
       return this.mapToDomain(product)
     } catch (error) {
       throw new Error("Couldn\'t load products");
+    }
+  }
+
+  async getStock(slug: string): Promise<number> {
+    try {
+      const stock = await prisma.product.findUnique({
+        where: {
+          slug
+        },
+        select: {
+          inStock: true
+        }
+      })
+
+      return stock?.inStock ?? 0
+    } catch (error) {
+      console.error(error)
+      return 0
     }
   }
 
