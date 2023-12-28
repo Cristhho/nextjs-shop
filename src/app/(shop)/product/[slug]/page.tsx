@@ -1,4 +1,5 @@
 export const revalidate = 604800;
+import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { titleFont } from '@/config/fonts';
@@ -11,6 +12,30 @@ interface Props {
   params: {
     slug: string;
   };
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const slug = params.slug
+ 
+  // fetch data
+  const product = await productBySlug.execute(slug)
+ 
+  // optionally access and extend (rather than replace) parent metadata
+  //const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: product?.title ?? '',
+    description: product?.description ?? '',
+    openGraph: {
+      title: product?.title ?? '',
+      description: product?.description ?? '',
+      images: [`/products/${product?.images[0]}`],
+    },
+  }
 }
 
 const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
