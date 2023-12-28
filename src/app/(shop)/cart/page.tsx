@@ -61,7 +61,10 @@ export default function CartPage() {
                 <div>
                   <p>{ product.title }</p>
                   <p>${ product.price }</p>
-                  <QuantitySelector quantity={ 3 } />
+                  <QuantitySelector
+                    quantity={ 3 }
+                    onValueChange={() => {}}
+                  />
 
                   <button className="underline mt-3">
                     Remover
