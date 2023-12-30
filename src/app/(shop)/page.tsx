@@ -2,9 +2,7 @@ export const revalidate = 60;
 import { redirect } from 'next/navigation';
 
 import { Pagination, ProductGrid, Title } from '@/components';
-import { PrismaProductDataSource } from '@/data/dataSource';
-import { ProductRepositoryImpl } from '@/data/repository';
-import { GetPaginatedProductsUseCase } from '@/domain/useCase';
+import { di } from '@/di/DependenciesLocator';
 
 interface Props {
   searchParams: {
@@ -12,12 +10,9 @@ interface Props {
   }
 }
 
-const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
-const productsUseCase = new GetPaginatedProductsUseCase(productsRepository)
-
 export default async function Home({ searchParams }: Props) {
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
-  const { items: products, totalPages } = await productsUseCase.execute({ page })
+  const { items: products, totalPages } = await di.GetPaginatedProductsUseCase.execute({ page })
 
   if ( products.length === 0 ) {
     redirect('/');

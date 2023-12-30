@@ -1,12 +1,5 @@
-import prisma from "../lib/prisma";
-import { CategoryRepositoryImpl, ProductRepositoryImpl } from "../data/repository";
-import { PrismaCategoryDataSource, PrismaProductDataSource, ProductInMemory } from "../data/dataSource";
-import { GetProductsUseCase } from "../domain/useCase";
-
-const memoryProductRepository = new ProductRepositoryImpl(new ProductInMemory());
-const prismaCategoryRespository = new CategoryRepositoryImpl(new PrismaCategoryDataSource());
-const prismaProductRepository = new ProductRepositoryImpl(new PrismaProductDataSource(prismaCategoryRespository));
-const getMemoryProducts = new GetProductsUseCase(memoryProductRepository);
+import prisma from '../lib/prisma';
+import { di } from '../di/DependenciesLocator';
 
 async function main() {
   await prisma.productImage.deleteMany();
@@ -14,12 +7,12 @@ async function main() {
   await prisma.category.deleteMany();
 
   const categories = ['shirts', 'pants', 'hoodies', 'hats'];
-  const products = await getMemoryProducts.execute();
+  const products = await di.GetProductsInMemory.execute()
   await prisma.category.createMany({
     data: categories.map((name) => ({ name }))
   });
 
-  await prismaProductRepository.saveMany(products)
+  await di.CreateProductUseCase.execute(products)
 
   console.log("seed executed. Check database!!");
 }

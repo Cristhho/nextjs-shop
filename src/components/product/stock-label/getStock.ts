@@ -1,12 +1,8 @@
 'use server'
 
-import { PrismaProductDataSource } from '@/data/dataSource'
-import { ProductRepositoryImpl } from '@/data/repository'
-import { GetProductStockUseCase } from '@/domain/useCase'
+import { di } from '@/di/DependenciesLocator'
 
-const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
-const stockUseCase = new GetProductStockUseCase(productsRepository)
 export const getStockAction = async (slug: string) => {
-  const stock = await stockUseCase.execute(slug)
+  const stock = await di.GetProductStockUseCase.execute(slug)
   return stock
 }

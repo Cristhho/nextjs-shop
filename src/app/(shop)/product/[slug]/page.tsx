@@ -4,10 +4,8 @@ import { notFound } from 'next/navigation';
 
 import { titleFont } from '@/config/fonts';
 import { ProductMobileSlideshow, ProductSlideshow, StockLabel } from '@/components';
-import { PrismaProductDataSource } from '@/data/dataSource';
-import { ProductRepositoryImpl } from '@/data/repository';
-import { GetProductBySlugUseCase } from '@/domain/useCase';
 import { AddToCart } from './ui/AddToCart';
+import { di } from '@/di/DependenciesLocator';
 
 interface Props {
   params: {
@@ -23,7 +21,7 @@ export async function generateMetadata(
   const slug = params.slug
  
   // fetch data
-  const product = await productBySlug.execute(slug)
+  const product = await di.GetProductBySlugUseCase.execute(slug)
  
   // optionally access and extend (rather than replace) parent metadata
   //const previousImages = (await parent).openGraph?.images || []
@@ -39,12 +37,10 @@ export async function generateMetadata(
   }
 }
 
-const productsRepository = new ProductRepositoryImpl(new PrismaProductDataSource())
-const productBySlug = new GetProductBySlugUseCase(productsRepository)
 export default async function ProductPage( { params }: Props ) {
 
   const { slug } = params;
-  const product = await productBySlug.execute(slug)
+  const product = await di.GetProductBySlugUseCase.execute(slug)
 
   if ( !product ) {
     notFound();
