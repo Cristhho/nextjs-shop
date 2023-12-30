@@ -1,4 +1,4 @@
-import { CartProduct } from '@/domain/model';
+import { CartProduct, Size } from '@/domain/model';
 import { CartRepository } from '@/domain/repository/CartRepository';
 import { CartDataSource } from '../dataSource/CartDataSource';
 
@@ -12,6 +12,10 @@ export class CartRepositoryImpl implements CartRepository {
 
   updateProductQuantity(product: CartProduct, quantity: number) {
     this.dataSource.updateProductQuantity(product, quantity)
+  }
+
+  removeProduct(id: string, size: Size) {
+    this.dataSource.removeProduct(id, size)
   }
 
 }

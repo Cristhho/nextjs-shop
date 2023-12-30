@@ -1,11 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { QuantitySelector } from '@/components';
 import { useCartStore } from '@/store';
-import Link from 'next/link';
 import { di } from '@/di/DependenciesLocator';
+import { CartProduct } from '@/domain/model';
 
 export const ProductsInCart = () => {
   const productsInCart = useCartStore((state) => state.cart)
@@ -19,6 +20,10 @@ export const ProductsInCart = () => {
     return (
       <></>
     )
+  }
+
+  const onRemove = (product: CartProduct) => {
+    di.RemoveProductFromCartUseCase.execute(product.id, product.size)
   }
 
   return (
@@ -49,7 +54,7 @@ export const ProductsInCart = () => {
                 onValueChange={(qty) => di.UpdateProductQuantityUseCase.execute(product, qty)}
               />
 
-              <button className="underline mt-3">
+              <button className="underline mt-3" onClick={() => onRemove(product)}>
                 Remover
               </button>
             </div>

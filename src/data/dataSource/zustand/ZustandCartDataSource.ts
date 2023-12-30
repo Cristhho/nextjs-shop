@@ -1,4 +1,4 @@
-import { CartProduct } from '@/domain/model';
+import { CartProduct, Size } from '@/domain/model';
 import { useCartStore } from '@/store';
 import { CartDataSource } from '../CartDataSource';
 
@@ -37,6 +37,14 @@ export class ZustandCartDataSource implements CartDataSource {
         return item;
       });
 
+      return { cart: updatedCartProducts }
+    })
+  }
+
+  removeProduct(id: string, size: Size) {
+    useCartStore.setState((state) => {
+      const { cart } = state
+      const updatedCartProducts = cart.filter((item) => item.id !== id || item.size !== size)
       return { cart: updatedCartProducts }
     })
   }

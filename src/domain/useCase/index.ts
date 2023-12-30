@@ -5,3 +5,5 @@ export * from './GetProductBySlugUseCase';
 export * from './GetProductStockUseCase';
 
 export * from './AddProductToCartUseCase';
+export * from './UpdateProductQuantityUseCase';
+export * from './RemoveProductFromCartUseCase';

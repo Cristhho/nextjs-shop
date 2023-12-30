@@ -5,8 +5,16 @@ import { ZustandCartDataSource } from '@/data/dataSource/zustand/ZustandCartData
 import { ProductRepositoryImpl } from '@/data/repository';
 import { CartRepositoryImpl } from '@/data/repository/CartRepositoryImpl';
 import { ProductRepository } from '@/domain/repository/ProductRepository';
-import { CreateProductUseCase, GetProductsUseCase, GetPaginatedProductsUseCase, GetProductBySlugUseCase, GetProductStockUseCase, AddProductToCartUseCase } from '@/domain/useCase';
-import { UpdateProductQuantityUseCase } from '@/domain/useCase/UpdateProductQuantityUseCase';
+import {
+  CreateProductUseCase,
+  GetProductsUseCase,
+  GetPaginatedProductsUseCase,
+  GetProductBySlugUseCase,
+  GetProductStockUseCase,
+  AddProductToCartUseCase,
+  UpdateProductQuantityUseCase,
+  RemoveProductFromCartUseCase
+} from '@/domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
 const productInMemoryDataSource = new ProductInMemory()
@@ -31,7 +39,8 @@ const memorySource = productUseCases(productsRepository(productInMemoryDataSourc
 
 const cartUseCases = {
   AddProductToCartUseCase: new AddProductToCartUseCase(cartRepository(zustandCartDataSource)),
-  UpdateProductQuantityUseCase: new UpdateProductQuantityUseCase(cartRepository(zustandCartDataSource))
+  UpdateProductQuantityUseCase: new UpdateProductQuantityUseCase(cartRepository(zustandCartDataSource)),
+  RemoveProductFromCartUseCase: new RemoveProductFromCartUseCase(cartRepository(zustandCartDataSource))
 }
 
 export const di = {
@@ -43,5 +52,6 @@ export const di = {
   GetProductStockUseCase: prismaSource.GetProductStockUseCase,
 
   AddProductToCartUseCase: cartUseCases.AddProductToCartUseCase,
-  UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase
+  UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,
+  RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase
 }
