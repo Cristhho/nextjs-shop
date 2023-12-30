@@ -26,4 +26,19 @@ export class ZustandCartDataSource implements CartDataSource {
     })
   }
 
+  updateProductQuantity(product: CartProduct, quantity: number) {
+    useCartStore.setState((state) => {
+      const { cart } = state
+      const updatedCartProducts = cart.map((item) => {
+        if (item.id === product.id && item.size === product.size) {
+          return { ...item, quantity: quantity };
+        }
+  
+        return item;
+      });
+
+      return { cart: updatedCartProducts }
+    })
+  }
+
 }

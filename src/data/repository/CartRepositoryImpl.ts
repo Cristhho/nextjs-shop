@@ -6,8 +6,12 @@ export class CartRepositoryImpl implements CartRepository {
 
   constructor(private readonly dataSource: CartDataSource) {}
 
-  addProductToCart(product: CartProduct): void {
-    return this.dataSource.addProduct(product)
+  addProductToCart(product: CartProduct) {
+    this.dataSource.addProduct(product)
+  }
+
+  updateProductQuantity(product: CartProduct, quantity: number) {
+    this.dataSource.updateProductQuantity(product, quantity)
   }
 
 }

@@ -6,7 +6,7 @@ export class AddProductToCartUseCase {
   constructor(private readonly cartRepository: CartRepository) {}
 
   execute(product: Product, size: Size, quantity: number) {
-    return this.cartRepository.addProductToCart(this.mapToCartProduct(product, size, quantity))
+    this.cartRepository.addProductToCart(this.mapToCartProduct(product, size, quantity))
   }
 
   private mapToCartProduct(product: Product, size: Size, quantity: number): CartProduct {
