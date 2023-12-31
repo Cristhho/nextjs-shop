@@ -7,6 +7,7 @@ import { QuantitySelector } from '@/components';
 import { useCartStore } from '@/store';
 import { di } from '@/di/DependenciesLocator';
 import { CartProduct } from '@/domain/model';
+import { currencyFormat } from '@/utils';
 
 export const ProductsInCart = () => {
   const productsInCart = useCartStore((state) => state.cart)
@@ -48,7 +49,7 @@ export const ProductsInCart = () => {
               <Link href={`/product/${product.slug}`} className='hover:underline'>
                 <p>{ product.title } ({product.size})</p>
               </Link>
-              <p>${ product.price }</p>
+              <p>{ currencyFormat(product.price) }</p>
               <QuantitySelector
                 quantity={ product.quantity }
                 onValueChange={(qty) => di.UpdateProductQuantityUseCase.execute(product, qty)}
