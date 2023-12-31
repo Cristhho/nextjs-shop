@@ -1,4 +1,4 @@
-import { CartProduct, Size } from '@/domain/model';
+import { CartProduct, CartSummary, Size } from '@/domain/model';
 import { useCartStore } from '@/store';
 import { CartDataSource } from '../CartDataSource';
 
@@ -47,6 +47,23 @@ export class ZustandCartDataSource implements CartDataSource {
       const updatedCartProducts = cart.filter((item) => item.id !== id || item.size !== size)
       return { cart: updatedCartProducts }
     })
+  }
+
+  summary(): CartSummary {
+    const { cart, getTotalItems } = useCartStore.getState()
+    const subTotal = cart.reduce(
+      (subTotal, product) => product.quantity * product.price + subTotal,
+      0
+    )
+    const tax = subTotal * 0.15;
+    const total = subTotal + tax;
+
+    return {
+      subTotal,
+      tax,
+      total,
+      itemsInCart: getTotalItems()
+    }
   }
 
 }

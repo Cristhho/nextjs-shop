@@ -13,7 +13,8 @@ import {
   GetProductStockUseCase,
   AddProductToCartUseCase,
   UpdateProductQuantityUseCase,
-  RemoveProductFromCartUseCase
+  RemoveProductFromCartUseCase,
+  GetCartSummaryUseCase
 } from '@/domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -40,7 +41,8 @@ const memorySource = productUseCases(productsRepository(productInMemoryDataSourc
 const cartUseCases = {
   AddProductToCartUseCase: new AddProductToCartUseCase(cartRepository(zustandCartDataSource)),
   UpdateProductQuantityUseCase: new UpdateProductQuantityUseCase(cartRepository(zustandCartDataSource)),
-  RemoveProductFromCartUseCase: new RemoveProductFromCartUseCase(cartRepository(zustandCartDataSource))
+  RemoveProductFromCartUseCase: new RemoveProductFromCartUseCase(cartRepository(zustandCartDataSource)),
+  GetCartSummaryUseCase: new GetCartSummaryUseCase(cartRepository(zustandCartDataSource))
 }
 
 export const di = {
@@ -53,5 +55,6 @@ export const di = {
 
   AddProductToCartUseCase: cartUseCases.AddProductToCartUseCase,
   UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,
-  RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase
+  RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase,
+  GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase
 }
