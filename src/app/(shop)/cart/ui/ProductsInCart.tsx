@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { QuantitySelector } from '@/components';
 import { useCartStore } from '@/store';
@@ -26,6 +27,8 @@ export const ProductsInCart = () => {
   const onRemove = (product: CartProduct) => {
     di.RemoveProductFromCartUseCase.execute(product.id, product.size)
   }
+
+  if (productsInCart.length < 1) redirect('/empty');
 
   return (
     <>
