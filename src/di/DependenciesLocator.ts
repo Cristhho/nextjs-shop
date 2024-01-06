@@ -17,7 +17,8 @@ import {
   UpdateProductQuantityUseCase,
   RemoveProductFromCartUseCase,
   GetCartSummaryUseCase,
-  CreateUserUseCase
+  CreateUserUseCase,
+  GetUserByEmail
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -51,7 +52,8 @@ const cartUseCases = {
 }
 
 const userUseCases = {
-  CreateUserUseCase: new CreateUserUseCase(userRepository(prismaUserDataSource))
+  CreateUserUseCase: new CreateUserUseCase(userRepository(prismaUserDataSource)),
+  GetUserByEmail: new GetUserByEmail(userRepository(prismaUserDataSource))
 }
 
 export const di = {
@@ -67,5 +69,6 @@ export const di = {
   RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase,
   GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase,
 
-  CreateUserUseCase: userUseCases.CreateUserUseCase
+  CreateUserUseCase: userUseCases.CreateUserUseCase,
+  GetUserByEmail: userUseCases.GetUserByEmail
 }

@@ -8,8 +8,6 @@ import { authenticate } from '@/lib/actions';
 export const LoginForm = () => {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
-  console.log(errorMessage)
-
   return (
     <form className='flex flex-col' action={dispatch}>
       <label htmlFor='email'>Correo electrónico</label>

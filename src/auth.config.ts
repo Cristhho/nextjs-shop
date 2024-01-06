@@ -1,6 +1,9 @@
 import NextAuth, { type NextAuthConfig } from 'next-auth';
 import credentials from 'next-auth/providers/credentials';
 import {z} from 'zod';
+import bcrypt from 'bcryptjs';
+
+import { di } from './di/DependenciesLocator';
  
 export const authConfig: NextAuthConfig = {
   pages: {
@@ -17,9 +20,17 @@ export const authConfig: NextAuthConfig = {
         if (!parsedCredentials.success) return null;
 
         const { email, password } = parsedCredentials.data
-        console.log(email, password)
+        
+        const user = await di.GetUserByEmail.execute(email)
+        if (!user) return null;
+        if (!bcrypt.compareSync(password, user.password)) return null;
 
-        return null;
+        const {password: _, ...rest} = user
+
+        return {
+          ...rest,
+          id: rest.id!
+        }
       },
     }),
   ]

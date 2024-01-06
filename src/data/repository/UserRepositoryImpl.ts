@@ -9,4 +9,8 @@ export class UserRepositoryImpl implements UserRepository {
   saveMany(users: User[]): Promise<boolean> {
     return this.dataSource.createManyProducts(users)
   }
+
+  findByEmail(email: string): Promise<User | null> {
+      return this.dataSource.getByEmail(email)
+  }
 }

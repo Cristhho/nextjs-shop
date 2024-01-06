@@ -12,4 +12,14 @@ export class PrismaUserDataSource implements UserDataSource {
       res(true)
     })
   }
+
+  async getByEmail(email: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+
+    return user
+  }
 }

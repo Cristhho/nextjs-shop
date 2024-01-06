@@ -10,3 +10,4 @@ export * from './RemoveProductFromCartUseCase';
 export * from './GetCartSummaryUseCase';
 
 export * from './CreateUserUseCase';
+export * from './GetUserByEmail';
