@@ -1,10 +1,12 @@
-import { PrismaCategoryDataSource, PrismaProductDataSource, ProductInMemory } from '@/data/dataSource';
-import { CartDataSource } from '@/data/dataSource/CartDataSource';
-import { ProductDataSource } from '@/data/dataSource/ProductDataSource';
-import { ZustandCartDataSource } from '@/data/dataSource/zustand/ZustandCartDataSource';
-import { ProductRepositoryImpl } from '@/data/repository';
-import { CartRepositoryImpl } from '@/data/repository/CartRepositoryImpl';
-import { ProductRepository } from '@/domain/repository/ProductRepository';
+import { PrismaCategoryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
+import { CartDataSource } from '../data/dataSource/CartDataSource';
+import { ProductDataSource } from '../data/dataSource/ProductDataSource';
+import { UserDataSource } from '../data/dataSource/UserDataSource';
+import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
+import { ProductRepositoryImpl } from '../data/repository';
+import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
+import { UserRepositoryImpl } from '../data/repository/UserRepositoryImpl';
+import { ProductRepository } from '../domain/repository/ProductRepository';
 import {
   CreateProductUseCase,
   GetProductsUseCase,
@@ -14,16 +16,19 @@ import {
   AddProductToCartUseCase,
   UpdateProductQuantityUseCase,
   RemoveProductFromCartUseCase,
-  GetCartSummaryUseCase
-} from '@/domain/useCase';
+  GetCartSummaryUseCase,
+  CreateUserUseCase
+} from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
 const productInMemoryDataSource = new ProductInMemory()
 const prismaProductDataSource = new PrismaProductDataSource(prismaCategoryDataSource)
 const zustandCartDataSource = new ZustandCartDataSource()
+const prismaUserDataSource = new PrismaUserDataSource()
 
 const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)
+const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source)
 
 const productUseCases = (productRepository: ProductRepository) => {
   return {
@@ -45,6 +50,10 @@ const cartUseCases = {
   GetCartSummaryUseCase: new GetCartSummaryUseCase(cartRepository(zustandCartDataSource))
 }
 
+const userUseCases = {
+  CreateUserUseCase: new CreateUserUseCase(userRepository(prismaUserDataSource))
+}
+
 export const di = {
   GetProductsInMemory: memorySource.GetProductsUseCase,
   GetProductsUseCase: prismaSource.GetProductsUseCase,
@@ -56,5 +65,7 @@ export const di = {
   AddProductToCartUseCase: cartUseCases.AddProductToCartUseCase,
   UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,
   RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase,
-  GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase
+  GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase,
+
+  CreateUserUseCase: userUseCases.CreateUserUseCase
 }

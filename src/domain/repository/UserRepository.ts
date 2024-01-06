@@ -1,0 +1,5 @@
+import { User } from '../model';
+
+export interface UserRepository {
+  saveMany(users: User[]): Promise<boolean>;
+}

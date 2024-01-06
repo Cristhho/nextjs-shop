@@ -8,3 +8,5 @@ export * from './AddProductToCartUseCase';
 export * from './UpdateProductQuantityUseCase';
 export * from './RemoveProductFromCartUseCase';
 export * from './GetCartSummaryUseCase';
+
+export * from './CreateUserUseCase';

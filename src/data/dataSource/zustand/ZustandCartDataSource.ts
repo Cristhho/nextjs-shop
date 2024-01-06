@@ -1,5 +1,5 @@
 import { CartProduct, CartSummary, Size } from '@/domain/model';
-import { useCartStore } from '@/store';
+import { useCartStore } from '../../../store';
 import { CartDataSource } from '../CartDataSource';
 
 export class ZustandCartDataSource implements CartDataSource {
