@@ -6,9 +6,18 @@ import { IoInformationOutline } from 'react-icons/io5';
 import clsx from 'clsx';
 
 import { authenticate } from '@/lib/actions';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export const LoginForm = () => {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const router = useRouter()
+
+  useEffect(() => {
+    if (errorMessage === 'success') {
+      router.replace('/')
+    }
+  }, [errorMessage]);
 
   return (
     <form className='flex flex-col' action={dispatch}>
