@@ -1,6 +1,7 @@
-import { User } from '@/domain/model';
+import { CreatedUser, User } from '@/domain/model';
 
 export interface UserDataSource {
-  createManyProducts(users: User[]): Promise<boolean>;
+  createManyUsers(users: User[]): Promise<boolean>;
   getByEmail(email: string): Promise<User | null>;
+  createUser(name: string, email: string, password: string): Promise<CreatedUser>;
 }

@@ -3,9 +3,8 @@ import { CartDataSource } from '../data/dataSource/CartDataSource';
 import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
 import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
-import { ProductRepositoryImpl } from '../data/repository';
+import { ProductRepositoryImpl, UserRepositoryImpl } from '../data/repository';
 import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
-import { UserRepositoryImpl } from '../data/repository/UserRepositoryImpl';
 import { ProductRepository } from '../domain/repository/ProductRepository';
 import {
   CreateProductUseCase,
@@ -18,7 +17,8 @@ import {
   RemoveProductFromCartUseCase,
   GetCartSummaryUseCase,
   CreateUserUseCase,
-  GetUserByEmail
+  GetUserByEmail,
+  SaveUserUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -53,7 +53,8 @@ const cartUseCases = {
 
 const userUseCases = {
   CreateUserUseCase: new CreateUserUseCase(userRepository(prismaUserDataSource)),
-  GetUserByEmail: new GetUserByEmail(userRepository(prismaUserDataSource))
+  GetUserByEmail: new GetUserByEmail(userRepository(prismaUserDataSource)),
+  SaveUserUseCase: new SaveUserUseCase(userRepository(prismaUserDataSource)),
 }
 
 export const di = {
@@ -70,5 +71,6 @@ export const di = {
   GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase,
 
   CreateUserUseCase: userUseCases.CreateUserUseCase,
-  GetUserByEmail: userUseCases.GetUserByEmail
+  GetUserByEmail: userUseCases.GetUserByEmail,
+  SaveUserUseCase: userUseCases.SaveUserUseCase
 }

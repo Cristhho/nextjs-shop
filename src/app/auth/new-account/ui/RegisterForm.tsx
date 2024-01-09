@@ -4,17 +4,24 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
-type FormInputs = {
-  name: string,
-  email: string,
-  password: string
-}
+import { RegisterUserForm } from '@/domain/model';
+import { useState } from 'react';
+import { login, registerUser } from '@/lib/actions';
 
 export const RegisterForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>()
+  const [errorMessage, setErrorMessage] = useState('')
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterUserForm>()
 
-  const onSubmit = async (data: FormInputs) => {
-    const { name, email, password } = data
+  const onSubmit = async (data: RegisterUserForm) => {
+    setErrorMessage('')
+    const resp = await registerUser(data)
+    if (!resp.ok) {
+      setErrorMessage(resp.message)
+      return
+    }
+
+    await login(data.email.toLowerCase(), data.password)
+    window.location.replace('/')
   }
 
   return (
@@ -55,6 +62,7 @@ export const RegisterForm = () => {
         {...register('password', { required: true, minLength: 6 })}
       />
 
+      <span className='text-red-500'>{errorMessage}</span>
       <button className="btn-primary">Crear cuenta</button>
 
       {/* divisor l ine */}
