@@ -1,4 +1,4 @@
-import { CartProduct, CartSummary, Size } from '@/domain/model';
+import { Address, CartProduct, CartSummary, Size } from '@/domain/model';
 import { CartRepository } from '@/domain/repository/CartRepository';
 import { CartDataSource } from '../dataSource/CartDataSource';
 
@@ -20,6 +20,10 @@ export class CartRepositoryImpl implements CartRepository {
 
   getSummary() {
     return this.dataSource.summary()
+  }
+
+  saveAddress(address: Address) {
+    this.dataSource.saveAddress(address)
   }
 
 }

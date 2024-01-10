@@ -1,5 +1,5 @@
-import { Product } from '../model';
-import { ProductRepository } from '../repository/ProductRepository';
+import { Product } from '../../model';
+import { ProductRepository } from '../../repository/ProductRepository';
 
 export class CreateProductUseCase {
   constructor(private readonly productRepository: ProductRepository) {}

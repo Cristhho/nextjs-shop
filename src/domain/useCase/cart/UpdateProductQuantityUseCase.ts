@@ -1,5 +1,5 @@
-import { CartProduct } from '../model';
-import { CartRepository } from '../repository/CartRepository';
+import { CartProduct } from '../../model';
+import { CartRepository } from '../../repository/CartRepository';
 
 export class UpdateProductQuantityUseCase {
 

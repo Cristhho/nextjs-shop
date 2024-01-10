@@ -1,17 +1,18 @@
-export * from './GetProductsUseCase';
-export * from './CreateProductUseCase';
-export * from './GetPaginatedProductsUseCase';
-export * from './GetProductBySlugUseCase';
-export * from './GetProductStockUseCase';
+export * from './product/GetProductsUseCase';
+export * from './product/CreateProductUseCase';
+export * from './product/GetPaginatedProductsUseCase';
+export * from './product/GetProductBySlugUseCase';
+export * from './product/GetProductStockUseCase';
 
-export * from './AddProductToCartUseCase';
-export * from './UpdateProductQuantityUseCase';
-export * from './RemoveProductFromCartUseCase';
-export * from './GetCartSummaryUseCase';
+export * from './cart/AddProductToCartUseCase';
+export * from './cart/UpdateProductQuantityUseCase';
+export * from './cart/RemoveProductFromCartUseCase';
+export * from './cart/GetCartSummaryUseCase';
+export * from './cart/SaveAddressUseCase';
 
-export * from './CreateUserUseCase';
-export * from './GetUserByEmail';
-export * from './SaveUserUseCase';
+export * from './user/CreateUserUseCase';
+export * from './user/GetUserByEmail';
+export * from './user/SaveUserUseCase';
 
-export * from './CreateCountryUseCase';
-export * from './GetAllCountriesUseCase';
+export * from './country/CreateCountryUseCase';
+export * from './country/GetAllCountriesUseCase';

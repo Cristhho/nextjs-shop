@@ -1,4 +1,4 @@
-import { CartRepository } from '../repository/CartRepository';
+import { CartRepository } from '../../repository/CartRepository';
 
 export class GetCartSummaryUseCase {
 

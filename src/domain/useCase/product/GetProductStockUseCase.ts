@@ -1,4 +1,4 @@
-import { ProductRepository } from "../repository/ProductRepository";
+import { ProductRepository } from "../../repository/ProductRepository";
 
 export class GetProductStockUseCase {
   constructor(private readonly productRepository: ProductRepository) {}

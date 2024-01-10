@@ -1,5 +1,5 @@
-import { ProductsPaginationOptions } from '../model';
-import { ProductRepository } from '../repository/ProductRepository';
+import { ProductsPaginationOptions } from '../../model';
+import { ProductRepository } from '../../repository/ProductRepository';
 
 export class GetPaginatedProductsUseCase {
   constructor(private readonly productRepository: ProductRepository) {}

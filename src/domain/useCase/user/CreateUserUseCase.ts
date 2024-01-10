@@ -1,5 +1,5 @@
-import { User } from '../model';
-import { UserRepository } from '../repository/UserRepository';
+import { User } from '../../model';
+import { UserRepository } from '../../repository/UserRepository';
 
 export class CreateUserUseCase {
 

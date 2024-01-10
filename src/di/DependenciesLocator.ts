@@ -21,7 +21,8 @@ import {
   GetUserByEmail,
   SaveUserUseCase,
   CreateCountryUseCase,
-  GetAllCountriesUseCase
+  GetAllCountriesUseCase,
+  SaveAddressUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -53,7 +54,8 @@ const cartUseCases = {
   AddProductToCartUseCase: new AddProductToCartUseCase(cartRepository(zustandCartDataSource)),
   UpdateProductQuantityUseCase: new UpdateProductQuantityUseCase(cartRepository(zustandCartDataSource)),
   RemoveProductFromCartUseCase: new RemoveProductFromCartUseCase(cartRepository(zustandCartDataSource)),
-  GetCartSummaryUseCase: new GetCartSummaryUseCase(cartRepository(zustandCartDataSource))
+  GetCartSummaryUseCase: new GetCartSummaryUseCase(cartRepository(zustandCartDataSource)),
+  SaveAddressUseCase: new SaveAddressUseCase(cartRepository(zustandCartDataSource)),
 }
 
 const userUseCases = {
@@ -79,6 +81,7 @@ export const di = {
   UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,
   RemoveProductFromCartUseCase: cartUseCases.RemoveProductFromCartUseCase,
   GetCartSummaryUseCase: cartUseCases.GetCartSummaryUseCase,
+  SaveAddressUseCase: cartUseCases.SaveAddressUseCase,
 
   CreateUserUseCase: userUseCases.CreateUserUseCase,
   GetUserByEmail: userUseCases.GetUserByEmail,

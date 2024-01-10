@@ -1,4 +1,4 @@
-import { CountryRepository } from '../repository/CountryRepository';
+import { CountryRepository } from '../../repository/CountryRepository';
 
 export class GetAllCountriesUseCase {
 

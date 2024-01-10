@@ -1,4 +1,4 @@
-import { CartProduct, CartSummary, Size } from '@/domain/model';
+import { Address, CartProduct, CartSummary, Size } from '@/domain/model';
 import { useCartStore } from '../../../store';
 import { CartDataSource } from '../CartDataSource';
 
@@ -64,6 +64,12 @@ export class ZustandCartDataSource implements CartDataSource {
       total,
       itemsInCart: getTotalItems()
     }
+  }
+
+  saveAddress(address: Address): void {
+    useCartStore.setState(() => {
+      return { address: address }
+    })
   }
 
 }

@@ -1,5 +1,5 @@
-import { Country } from '../model';
-import { CountryRepository } from '../repository/CountryRepository';
+import { Country } from '../../model';
+import { CountryRepository } from '../../repository/CountryRepository';
 
 export class CreateCountryUseCase {
   constructor(private readonly countryRepository: CountryRepository) {}

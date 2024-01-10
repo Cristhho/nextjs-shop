@@ -1,5 +1,5 @@
-import { Size } from '../model';
-import { CartRepository } from '../repository/CartRepository';
+import { Size } from '../../model';
+import { CartRepository } from '../../repository/CartRepository';
 
 export class RemoveProductFromCartUseCase {
 
