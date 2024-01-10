@@ -1,12 +1,14 @@
 import prisma from '../lib/prisma';
 import { di } from '../di/DependenciesLocator';
 import { initialData } from './seed';
+import { countries } from './seed-countries';
 
 async function main() {
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.country.deleteMany();
 
   const categories = ['shirts', 'pants', 'hoodies', 'hats'];
   const users = initialData.users
@@ -17,6 +19,7 @@ async function main() {
 
   await di.CreateProductUseCase.execute(products)
   await di.CreateUserUseCase.execute(users)
+  await di.CreateCountryUseCase.execute(countries)
 
   console.log("seed executed. Check database!!");
 }

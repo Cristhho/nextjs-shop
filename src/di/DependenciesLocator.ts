@@ -1,9 +1,10 @@
-import { PrismaCategoryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
+import { CountryDataSource } from '../data/dataSource/CountryDataSource';
+import { PrismaCategoryDataSource, PrismaCountryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
 import { CartDataSource } from '../data/dataSource/CartDataSource';
 import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
 import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
-import { ProductRepositoryImpl, UserRepositoryImpl } from '../data/repository';
+import { ProductRepositoryImpl, UserRepositoryImpl, CountryRepositoryImpl } from '../data/repository';
 import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
 import { ProductRepository } from '../domain/repository/ProductRepository';
 import {
@@ -18,7 +19,8 @@ import {
   GetCartSummaryUseCase,
   CreateUserUseCase,
   GetUserByEmail,
-  SaveUserUseCase
+  SaveUserUseCase,
+  CreateCountryUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -26,10 +28,12 @@ const productInMemoryDataSource = new ProductInMemory()
 const prismaProductDataSource = new PrismaProductDataSource(prismaCategoryDataSource)
 const zustandCartDataSource = new ZustandCartDataSource()
 const prismaUserDataSource = new PrismaUserDataSource()
+const prismaCountryDataSource = new PrismaCountryDataSource()
 
 const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)
 const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source)
+const countryRepository = (source: CountryDataSource) => new CountryRepositoryImpl(source)
 
 const productUseCases = (productRepository: ProductRepository) => {
   return {
@@ -57,6 +61,10 @@ const userUseCases = {
   SaveUserUseCase: new SaveUserUseCase(userRepository(prismaUserDataSource)),
 }
 
+const countryUseCases = {
+  CreateCountryUseCase: new CreateCountryUseCase(countryRepository(prismaCountryDataSource))
+}
+
 export const di = {
   GetProductsInMemory: memorySource.GetProductsUseCase,
   GetProductsUseCase: prismaSource.GetProductsUseCase,
@@ -72,5 +80,7 @@ export const di = {
 
   CreateUserUseCase: userUseCases.CreateUserUseCase,
   GetUserByEmail: userUseCases.GetUserByEmail,
-  SaveUserUseCase: userUseCases.SaveUserUseCase
+  SaveUserUseCase: userUseCases.SaveUserUseCase,
+
+  CreateCountryUseCase: countryUseCases.CreateCountryUseCase
 }
