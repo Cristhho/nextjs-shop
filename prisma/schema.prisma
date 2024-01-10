@@ -89,6 +89,7 @@ model Address {
   address    String
   address2   String?
   postalCode String
+  city       String
   phone      String
 
   country   Country @relation(fields: [countryId], references: [id])
