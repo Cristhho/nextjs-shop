@@ -1,9 +1,6 @@
 'use server'
 
-import bcrypt from 'bcryptjs';
-
 import { RegisterUserForm } from '@/domain/model';
-import prisma from '@/lib/prisma';
 import { di } from '@/di/DependenciesLocator';
 
 export async function registerUser(form: RegisterUserForm) {
