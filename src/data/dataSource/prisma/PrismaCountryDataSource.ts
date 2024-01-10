@@ -12,4 +12,17 @@ export class PrismaCountryDataSource implements CountryDataSource {
       res(true)
     })
   }
+
+  async getAll(): Promise<Country[]> {
+    try {
+      return await prisma.country.findMany({
+        orderBy: {
+          name: 'asc'
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      return []
+    }
+  }
 }

@@ -9,4 +9,8 @@ export class CountryRepositoryImpl implements CountryRepository {
   saveMany(countries: Country[]): Promise<boolean> {
     return this.dataSource.createManyCountries(countries)
   }
+
+  getAll(): Promise<Country[]> {
+    return this.dataSource.getAll()
+  }
 }

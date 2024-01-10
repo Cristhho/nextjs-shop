@@ -14,3 +14,4 @@ export * from './GetUserByEmail';
 export * from './SaveUserUseCase';
 
 export * from './CreateCountryUseCase';
+export * from './GetAllCountriesUseCase';

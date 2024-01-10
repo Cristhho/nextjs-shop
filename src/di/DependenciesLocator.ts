@@ -20,7 +20,8 @@ import {
   CreateUserUseCase,
   GetUserByEmail,
   SaveUserUseCase,
-  CreateCountryUseCase
+  CreateCountryUseCase,
+  GetAllCountriesUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -62,7 +63,8 @@ const userUseCases = {
 }
 
 const countryUseCases = {
-  CreateCountryUseCase: new CreateCountryUseCase(countryRepository(prismaCountryDataSource))
+  CreateCountryUseCase: new CreateCountryUseCase(countryRepository(prismaCountryDataSource)),
+  GetAllCountriesUseCase: new GetAllCountriesUseCase(countryRepository(prismaCountryDataSource))
 }
 
 export const di = {
@@ -82,5 +84,6 @@ export const di = {
   GetUserByEmail: userUseCases.GetUserByEmail,
   SaveUserUseCase: userUseCases.SaveUserUseCase,
 
-  CreateCountryUseCase: countryUseCases.CreateCountryUseCase
+  CreateCountryUseCase: countryUseCases.CreateCountryUseCase,
+  GetAllCountriesUseCase: countryUseCases.GetAllCountriesUseCase
 }
