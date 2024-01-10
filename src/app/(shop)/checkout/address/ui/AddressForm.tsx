@@ -5,15 +5,27 @@ import { useForm } from 'react-hook-form';
 import { AddressFormInputs, Country } from '@/domain/model';
 import clsx from 'clsx';
 
+import { di } from '@/di/DependenciesLocator';
+import { useCartStore } from '@/store';
+import { useEffect } from 'react';
+
 type Props = {
   countries: Country[]
 }
 
 export const AddressForm = ({ countries }: Props) => {
-  const {register, handleSubmit, formState: {isValid}} = useForm<AddressFormInputs>()
+  const {register, handleSubmit, formState: {isValid}, reset} = useForm<AddressFormInputs>()
+  const address = useCartStore((state) => state.address)
+
+  useEffect(() => {
+    if (address.firstName) {
+      reset(address)
+    }
+  }, [])
 
   const onSubmit = (data: AddressFormInputs) => {
-
+    const {remember, ...rest} = data
+    di.SaveAddressUseCase.execute(rest)
   }
 
   return (
