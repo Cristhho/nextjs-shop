@@ -16,3 +16,5 @@ export * from './user/SaveUserUseCase';
 
 export * from './country/CreateCountryUseCase';
 export * from './country/GetAllCountriesUseCase';
+
+export * as SaveDBAddressUseCase from './address/SaveAddressUseCase';

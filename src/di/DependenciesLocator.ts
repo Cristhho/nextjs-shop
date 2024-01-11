@@ -1,10 +1,11 @@
 import { CountryDataSource } from '../data/dataSource/CountryDataSource';
-import { PrismaCategoryDataSource, PrismaCountryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
+import { PrismaAddressDataSource, PrismaCategoryDataSource, PrismaCountryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
 import { CartDataSource } from '../data/dataSource/CartDataSource';
 import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
+import { AddressDataSource } from '../data/dataSource/AddressDataSource';
 import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
-import { ProductRepositoryImpl, UserRepositoryImpl, CountryRepositoryImpl } from '../data/repository';
+import { ProductRepositoryImpl, UserRepositoryImpl, CountryRepositoryImpl, AddressRepositoryImpl } from '../data/repository';
 import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
 import { ProductRepository } from '../domain/repository/ProductRepository';
 import {
@@ -22,7 +23,8 @@ import {
   SaveUserUseCase,
   CreateCountryUseCase,
   GetAllCountriesUseCase,
-  SaveAddressUseCase
+  SaveAddressUseCase,
+  SaveDBAddressUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -31,11 +33,13 @@ const prismaProductDataSource = new PrismaProductDataSource(prismaCategoryDataSo
 const zustandCartDataSource = new ZustandCartDataSource()
 const prismaUserDataSource = new PrismaUserDataSource()
 const prismaCountryDataSource = new PrismaCountryDataSource()
+const prismaAddressDataSource = new PrismaAddressDataSource()
 
 const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)
 const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source)
 const countryRepository = (source: CountryDataSource) => new CountryRepositoryImpl(source)
+const addressRepository = (source: AddressDataSource) => new AddressRepositoryImpl(source)
 
 const productUseCases = (productRepository: ProductRepository) => {
   return {
@@ -69,6 +73,10 @@ const countryUseCases = {
   GetAllCountriesUseCase: new GetAllCountriesUseCase(countryRepository(prismaCountryDataSource))
 }
 
+const addressUseCases = {
+  SaveDBAddressUseCase: new SaveDBAddressUseCase.SaveAddressUseCase(addressRepository(prismaAddressDataSource))
+}
+
 export const di = {
   GetProductsInMemory: memorySource.GetProductsUseCase,
   GetProductsUseCase: prismaSource.GetProductsUseCase,
@@ -88,5 +96,7 @@ export const di = {
   SaveUserUseCase: userUseCases.SaveUserUseCase,
 
   CreateCountryUseCase: countryUseCases.CreateCountryUseCase,
-  GetAllCountriesUseCase: countryUseCases.GetAllCountriesUseCase
+  GetAllCountriesUseCase: countryUseCases.GetAllCountriesUseCase,
+
+  SaveDBAddressUseCase: addressUseCases.SaveDBAddressUseCase
 }

@@ -1,19 +1,21 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-
-import { AddressFormInputs, Country } from '@/domain/model';
 import clsx from 'clsx';
 
+import { AddressFormInputs, Country } from '@/domain/model';
 import { di } from '@/di/DependenciesLocator';
 import { useCartStore } from '@/store';
-import { useEffect } from 'react';
+import { saveAddress } from '@/lib/actions';
 
 type Props = {
   countries: Country[]
 }
 
 export const AddressForm = ({ countries }: Props) => {
+  const {data: session} = useSession({required: true})
   const {register, handleSubmit, formState: {isValid}, reset} = useForm<AddressFormInputs>()
   const address = useCartStore((state) => state.address)
 
@@ -23,9 +25,15 @@ export const AddressForm = ({ countries }: Props) => {
     }
   }, [])
 
-  const onSubmit = (data: AddressFormInputs) => {
+  const onSubmit = async (data: AddressFormInputs) => {
     const {remember, ...rest} = data
     di.SaveAddressUseCase.execute(rest)
+
+    if (remember) {
+      await saveAddress(rest, session!.user.id)
+    } else {
+
+    }
   }
 
   return (
