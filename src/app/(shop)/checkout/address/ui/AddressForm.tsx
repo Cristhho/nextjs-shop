@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
@@ -16,6 +17,7 @@ type Props = {
 }
 
 export const AddressForm = ({ countries, dbAddress = {} }: Props) => {
+  const router = useRouter()
   const {data: session} = useSession({required: true})
   const {register, handleSubmit, formState: {isValid}, reset} = useForm<AddressFormInputs>({
     defaultValues: {
@@ -40,6 +42,8 @@ export const AddressForm = ({ countries, dbAddress = {} }: Props) => {
     } else {
       await deleteAddress(session!.user.id)
     }
+
+    router.push('/checkout')
   }
 
   return (
