@@ -1,11 +1,18 @@
+import { Address as PrismaAddress } from '@prisma/client';
+
 import { Address } from '@/domain/model';
 import { AddressDataSource } from '../AddressDataSource';
 import prisma from '@/lib/prisma';
 
 export class PrismaAddressDataSource implements AddressDataSource {
 
-  getByUser(userId: string): Promise<Address> {
-    throw new Error('Method not implemented.');
+  async getByUser(userId: string){
+    const address = await prisma.address.findUnique({
+      where: { userId }
+    })
+    if (!address) return null
+
+    return this.mapToDomain(address)
   }
 
   async save(address: Address, userId: string): Promise<boolean> {
@@ -63,6 +70,15 @@ export class PrismaAddressDataSource implements AddressDataSource {
       lastName: address.lastName,
       phone: address.phone,
       postalCode: address.postalCode,
+    }
+  }
+
+  private mapToDomain(address: PrismaAddress): Address {
+    const { countryId, userId, id, address2, ...rest } = address
+    return {
+      ...rest,
+      country: countryId,
+      address2: address2 ? address2 : ''
     }
   }
 

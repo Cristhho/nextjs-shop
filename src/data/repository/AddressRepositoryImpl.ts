@@ -6,8 +6,8 @@ export class AddressRepositoryImpl implements AddressRepository {
 
   constructor(private readonly dataSource: AddressDataSource) {}
 
-  getByUser(userId: string): Promise<Address> {
-    throw new Error('Method not implemented.');
+  getByUser(userId: string) {
+    return this.dataSource.getByUser(userId)
   }
 
   save(address: Address, userId: string): Promise<boolean> {

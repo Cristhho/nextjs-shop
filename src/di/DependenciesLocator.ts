@@ -25,7 +25,8 @@ import {
   GetAllCountriesUseCase,
   SaveAddressUseCase,
   SaveDBAddressUseCase,
-  DeleteAddressUseCase
+  DeleteAddressUseCase,
+  GetAddressUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -77,6 +78,7 @@ const countryUseCases = {
 const addressUseCases = {
   SaveDBAddressUseCase: new SaveDBAddressUseCase.SaveAddressUseCase(addressRepository(prismaAddressDataSource)),
   DeleteAddressUseCase: new DeleteAddressUseCase(addressRepository(prismaAddressDataSource)),
+  GetAddressUseCase: new GetAddressUseCase(addressRepository(prismaAddressDataSource))
 }
 
 export const di = {
@@ -101,5 +103,6 @@ export const di = {
   GetAllCountriesUseCase: countryUseCases.GetAllCountriesUseCase,
 
   SaveDBAddressUseCase: addressUseCases.SaveDBAddressUseCase,
-  DeleteAddressUseCase: addressUseCases.DeleteAddressUseCase
+  DeleteAddressUseCase: addressUseCases.DeleteAddressUseCase,
+  GetAddressUseCase: addressUseCases.GetAddressUseCase
 }

@@ -5,18 +5,24 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { AddressFormInputs, Country } from '@/domain/model';
+import { Address, AddressFormInputs, Country } from '@/domain/model';
 import { di } from '@/di/DependenciesLocator';
 import { useCartStore } from '@/store';
 import { deleteAddress, saveAddress } from '@/lib/actions';
 
 type Props = {
-  countries: Country[]
+  countries: Country[],
+  dbAddress?: Partial<Address>
 }
 
-export const AddressForm = ({ countries }: Props) => {
+export const AddressForm = ({ countries, dbAddress = {} }: Props) => {
   const {data: session} = useSession({required: true})
-  const {register, handleSubmit, formState: {isValid}, reset} = useForm<AddressFormInputs>()
+  const {register, handleSubmit, formState: {isValid}, reset} = useForm<AddressFormInputs>({
+    defaultValues: {
+      ...dbAddress,
+      remember: false
+    }
+  })
   const address = useCartStore((state) => state.address)
 
   useEffect(() => {
