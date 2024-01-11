@@ -15,7 +15,7 @@ export class AddressRepositoryImpl implements AddressRepository {
   }
 
   delete(userId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return this.dataSource.delete(userId)
   }
 
 }

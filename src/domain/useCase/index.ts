@@ -18,3 +18,4 @@ export * from './country/CreateCountryUseCase';
 export * from './country/GetAllCountriesUseCase';
 
 export * as SaveDBAddressUseCase from './address/SaveAddressUseCase';
+export * from './address/DeleteAddressUseCase';

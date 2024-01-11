@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { AddressFormInputs, Country } from '@/domain/model';
 import { di } from '@/di/DependenciesLocator';
 import { useCartStore } from '@/store';
-import { saveAddress } from '@/lib/actions';
+import { deleteAddress, saveAddress } from '@/lib/actions';
 
 type Props = {
   countries: Country[]
@@ -32,7 +32,7 @@ export const AddressForm = ({ countries }: Props) => {
     if (remember) {
       await saveAddress(rest, session!.user.id)
     } else {
-
+      await deleteAddress(session!.user.id)
     }
   }
 

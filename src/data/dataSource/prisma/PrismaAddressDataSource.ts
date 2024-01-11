@@ -18,8 +18,16 @@ export class PrismaAddressDataSource implements AddressDataSource {
     }
   }
 
-  delete(userId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async delete(userId: string): Promise<boolean> {
+    try {
+      await prisma.address.delete({
+        where: { userId }
+      })
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   private async createOrReplaceAddress(address: Address, userId: string) {
