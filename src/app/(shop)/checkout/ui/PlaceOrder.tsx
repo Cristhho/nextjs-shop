@@ -5,10 +5,13 @@ import { useEffect, useState } from 'react';
 import { useCartStore } from '@/store';
 import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
+import clsx from 'clsx';
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false)
+  const [savingOrder, setSavingOrder] = useState(false)
   const address = useCartStore((state) => state.address)
+  const productsInCart = useCartStore((state) => state.cart)
   const summary = di.GetCartSummaryUseCase.execute()
 
   useEffect(() => {
@@ -19,6 +22,18 @@ export const PlaceOrder = () => {
     return (
       <></>
     )
+  }
+
+  const onSaveOrder = async () => {
+    setSavingOrder(true)
+
+    const products = productsInCart.map((product) => ({
+      id: product.id,
+      quantity: product.quantity,
+      size: product.size
+    }))
+    console.log(address, products)
+    setSavingOrder(false)
   }
 
   return (
@@ -58,9 +73,15 @@ export const PlaceOrder = () => {
             Al hacer clic en &quot;Colocar orden&quot;, aceptas nuestros <a href="#" className="underline">términos y condiciones</a> y <a href="#" className="underline">política de privacidad</a>
           </span>
         </p>
+        <p className='text-red-500'>Error al crear orden</p>
         <button
             //href="/orders/123"
-            className="flex btn-primary justify-center">
+            className={clsx({
+              'btn-primary': !savingOrder,
+              'btn-disabled': savingOrder,
+            })}
+            disabled={savingOrder}
+            onClick={onSaveOrder}>
           Colocar orden
         </button>
       </div>
