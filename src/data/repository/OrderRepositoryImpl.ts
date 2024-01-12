@@ -1,6 +1,6 @@
 import { OrderRepository } from '@/domain/repository/OrderRepository';
 import { OrderDataSource } from '../dataSource/OrderDataSource';
-import { OrderProduct, Address } from '@/domain/model';
+import { OrderProduct, Address, OrderDetail } from '@/domain/model';
 
 export class OrderRepositoryImpl implements OrderRepository {
 
@@ -14,7 +14,8 @@ export class OrderRepositoryImpl implements OrderRepository {
     throw new Error('Method not implemented.');
   }
 
-  getById(orderId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  getById(orderId: string, userId: string): Promise<OrderDetail | null> {
+    return this.dataSource.getById(orderId, userId)
   }
+
 }

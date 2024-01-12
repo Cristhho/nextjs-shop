@@ -23,3 +23,4 @@ export * from './address/DeleteAddressUseCase';
 export * from './address/GetAddressUseCase';
 
 export * from './order/SaveOrderUseCase';
+export * from './order/GetOrderByIdUseCase';
