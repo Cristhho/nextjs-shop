@@ -3,7 +3,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { IoCardOutline } from 'react-icons/io5';
 
-import { Title } from '@/components';
+import { PaypalButton, Title } from '@/components';
 import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
 import { auth } from '@/auth.config';
@@ -97,6 +97,10 @@ export default async function OrderDetailPage( { params }: Props ) {
 
               <span className="mt-5 text-2xl">Total:</span>
               <span className="mt-5 text-2xl text-right">{currencyFormat(order.header.total)}</span>
+            </div>
+
+            <div className='mt-5 mb-2'>
+              <PaypalButton />
             </div>
           </div>
         </div>
