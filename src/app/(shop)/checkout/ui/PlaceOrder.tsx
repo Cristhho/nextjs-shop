@@ -1,15 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import clsx from 'clsx';
 
 import { useCartStore } from '@/store';
 import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
-import clsx from 'clsx';
+import { OrderProduct } from '@/domain/model';
+import { placeOrder } from '@/lib/actions';
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false)
   const [savingOrder, setSavingOrder] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter()
   const address = useCartStore((state) => state.address)
   const productsInCart = useCartStore((state) => state.cart)
   const summary = di.GetCartSummaryUseCase.execute()
@@ -26,13 +31,22 @@ export const PlaceOrder = () => {
 
   const onSaveOrder = async () => {
     setSavingOrder(true)
+    setErrorMessage('')
 
-    const products = productsInCart.map((product) => ({
+    const products: OrderProduct[] = productsInCart.map((product) => ({
       id: product.id,
       quantity: product.quantity,
       size: product.size
     }))
-    console.log(address, products)
+
+    const resp = await placeOrder(products, address)
+    if ( !resp.ok ) {
+      setSavingOrder(false);
+      setErrorMessage(resp.message);
+      return;
+    }
+
+    router.replace(`/orders/${resp.order}`)
     setSavingOrder(false)
   }
 
@@ -73,7 +87,7 @@ export const PlaceOrder = () => {
             Al hacer clic en &quot;Colocar orden&quot;, aceptas nuestros <a href="#" className="underline">términos y condiciones</a> y <a href="#" className="underline">política de privacidad</a>
           </span>
         </p>
-        <p className='text-red-500'>Error al crear orden</p>
+        <p className="text-red-500">{ errorMessage }</p>
         <button
             //href="/orders/123"
             className={clsx({

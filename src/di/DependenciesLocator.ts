@@ -1,11 +1,18 @@
 import { CountryDataSource } from '../data/dataSource/CountryDataSource';
-import { PrismaAddressDataSource, PrismaCategoryDataSource, PrismaCountryDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
+import { PrismaAddressDataSource, PrismaCategoryDataSource, PrismaCountryDataSource, PrismaOrderDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
 import { CartDataSource } from '../data/dataSource/CartDataSource';
 import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
 import { AddressDataSource } from '../data/dataSource/AddressDataSource';
+import { OrderDataSource } from '../data/dataSource/OrderDataSource';
 import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
-import { ProductRepositoryImpl, UserRepositoryImpl, CountryRepositoryImpl, AddressRepositoryImpl } from '../data/repository';
+import {
+  ProductRepositoryImpl,
+  UserRepositoryImpl,
+  CountryRepositoryImpl,
+  AddressRepositoryImpl,
+  OrderRepositoryImpl
+} from '../data/repository';
 import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
 import { ProductRepository } from '../domain/repository/ProductRepository';
 import {
@@ -26,7 +33,8 @@ import {
   SaveAddressUseCase,
   SaveDBAddressUseCase,
   DeleteAddressUseCase,
-  GetAddressUseCase
+  GetAddressUseCase,
+  SaveOrderUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -36,12 +44,14 @@ const zustandCartDataSource = new ZustandCartDataSource()
 const prismaUserDataSource = new PrismaUserDataSource()
 const prismaCountryDataSource = new PrismaCountryDataSource()
 const prismaAddressDataSource = new PrismaAddressDataSource()
+const prismaOrderDataSource = new PrismaOrderDataSource(prismaProductDataSource)
 
 const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)
 const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source)
 const countryRepository = (source: CountryDataSource) => new CountryRepositoryImpl(source)
 const addressRepository = (source: AddressDataSource) => new AddressRepositoryImpl(source)
+const orderRepository = (source: OrderDataSource) => new OrderRepositoryImpl(source)
 
 const productUseCases = (productRepository: ProductRepository) => {
   return {
@@ -81,6 +91,10 @@ const addressUseCases = {
   GetAddressUseCase: new GetAddressUseCase(addressRepository(prismaAddressDataSource))
 }
 
+const orderUseCases = {
+  SaveOrderUseCase: new SaveOrderUseCase(orderRepository(prismaOrderDataSource))
+}
+
 export const di = {
   GetProductsInMemory: memorySource.GetProductsUseCase,
   GetProductsUseCase: prismaSource.GetProductsUseCase,
@@ -104,5 +118,7 @@ export const di = {
 
   SaveDBAddressUseCase: addressUseCases.SaveDBAddressUseCase,
   DeleteAddressUseCase: addressUseCases.DeleteAddressUseCase,
-  GetAddressUseCase: addressUseCases.GetAddressUseCase
+  GetAddressUseCase: addressUseCases.GetAddressUseCase,
+
+  SaveOrderUseCase: orderUseCases.SaveOrderUseCase
 }

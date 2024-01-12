@@ -1,5 +1,5 @@
 import { Category, Product as PrismaProduct, ProductImage } from '@prisma/client';
-import { PaginationResponse, Product, Type } from '@/domain/model';
+import { OrderProduct, PaginationResponse, Product, Type } from '@/domain/model';
 import prisma from '../../../lib/prisma';
 import { ProductDataSource } from '../ProductDataSource';
 import { PrismaCategoryDataSource } from './PrismaCategoryDataSource';
@@ -133,6 +133,18 @@ export class PrismaProductDataSource implements ProductDataSource {
       console.error(error)
       return 0
     }
+  }
+
+  async findOrderProducts(products: OrderProduct[]) {
+    const productsDB = await prisma.product.findMany({
+      where: {
+        id: {
+          in: products.map((p) => p.id),
+        },
+      },
+    })
+
+    return productsDB
   }
 
   private mapToDomain(product: DBProduct): Product {
