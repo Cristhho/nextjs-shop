@@ -6,4 +6,5 @@ export interface CartRepository {
   removeProduct(id: CartProduct['id'], size: CartProduct['size']): void
   getSummary(): CartSummary
   saveAddress(address: Address): void
+  clearCart(): void
 }

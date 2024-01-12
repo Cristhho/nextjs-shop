@@ -9,6 +9,7 @@ export * from './cart/UpdateProductQuantityUseCase';
 export * from './cart/RemoveProductFromCartUseCase';
 export * from './cart/GetCartSummaryUseCase';
 export * from './cart/SaveAddressUseCase';
+export * from './cart/ClearCartUseCase';
 
 export * from './user/CreateUserUseCase';
 export * from './user/GetUserByEmail';

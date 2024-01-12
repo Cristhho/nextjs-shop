@@ -46,6 +46,7 @@ export const PlaceOrder = () => {
       return;
     }
 
+    di.ClearCartUseCase.execute()
     router.replace(`/orders/${resp.order}`)
     setSavingOrder(false)
   }

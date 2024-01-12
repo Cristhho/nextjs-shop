@@ -72,4 +72,10 @@ export class ZustandCartDataSource implements CartDataSource {
     })
   }
 
+  clear(): void {
+    useCartStore.setState(() => {
+      return { cart: [] }
+    })
+  }
+
 }

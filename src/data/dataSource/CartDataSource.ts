@@ -6,4 +6,5 @@ export interface CartDataSource {
   removeProduct(id: string, size: Size): void;
   summary(): CartSummary;
   saveAddress(address: Address): void;
+  clear(): void;
 }

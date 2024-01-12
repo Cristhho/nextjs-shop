@@ -26,4 +26,8 @@ export class CartRepositoryImpl implements CartRepository {
     this.dataSource.saveAddress(address)
   }
 
+  clearCart(): void {
+    this.dataSource.clear()
+  }
+
 }
