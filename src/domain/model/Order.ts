@@ -29,3 +29,10 @@ export interface OrderDetail {
   address: Address;
   items: OrderItem[]
 }
+
+export interface Order {
+  id: string;
+  isPaid: boolean;
+  firstName: string;
+  lastName: string;
+}

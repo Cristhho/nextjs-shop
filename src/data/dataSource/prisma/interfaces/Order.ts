@@ -8,3 +8,9 @@ export type PrismaOrder = Order & {
   OrderAddress: OrderAddress | null,
   OrderItem: DBOrderItem[]
 }
+
+export type SingleOrder = {
+  id: string,
+  isPaid: boolean,
+  OrderAddress: Pick<OrderAddress, 'firstName'|'lastName'>|null
+}

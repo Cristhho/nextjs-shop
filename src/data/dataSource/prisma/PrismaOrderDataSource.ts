@@ -1,10 +1,10 @@
-import { Order, OrderAddress, Prisma, Product } from "@prisma/client";
+import { Order, OrderAddress, Prisma, Product } from '@prisma/client';
 
-import { OrderProduct, Address, OrderDetail, OrderHeader, OrderItem } from "@/domain/model";
-import { OrderDataSource } from "../OrderDataSource";
-import prisma from "@/lib/prisma";
+import { OrderProduct, Address, OrderDetail, OrderHeader, OrderItem, Order as DomainOrder } from '@/domain/model';
+import { OrderDataSource } from '../OrderDataSource';
+import prisma from '@/lib/prisma';
 import { PrismaProductDataSource } from "./PrismaProductDataSource";
-import { PrismaOrder } from './interfaces/Order';
+import { PrismaOrder, SingleOrder } from './interfaces/Order';
 
 export class PrismaOrderDataSource implements OrderDataSource {
   constructor(private readonly prismaProduct: PrismaProductDataSource) {}
@@ -84,6 +84,26 @@ export class PrismaOrderDataSource implements OrderDataSource {
     if (order.userId !== userId) return null
 
     return this.mapToDomain(order);
+  }
+  
+  async getByUser(userId: string): Promise<DomainOrder[]> {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId
+      },
+      select: {
+        id: true,
+        isPaid: true,
+        OrderAddress: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        }
+      }
+    })
+
+    return orders.map((order) => this.mapToDomainOrder(order))
   }
 
   private getTotals(orderProducts: OrderProduct[], products: Product[]) {
@@ -220,6 +240,15 @@ export class PrismaOrderDataSource implements OrderDataSource {
         address2: address.address2 ?? ''
       },
       items
+    }
+  }
+
+  private mapToDomainOrder(order: SingleOrder): DomainOrder {
+    return {
+      id: order.id,
+      isPaid: order.isPaid,
+      firstName: order.OrderAddress?.firstName ?? '',
+      lastName: order.OrderAddress?.lastName ?? '',
     }
   }
 }

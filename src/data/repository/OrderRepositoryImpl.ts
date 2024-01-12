@@ -1,6 +1,6 @@
 import { OrderRepository } from '@/domain/repository/OrderRepository';
 import { OrderDataSource } from '../dataSource/OrderDataSource';
-import { OrderProduct, Address, OrderDetail } from '@/domain/model';
+import { OrderProduct, Address, OrderDetail, Order } from '@/domain/model';
 
 export class OrderRepositoryImpl implements OrderRepository {
 
@@ -10,8 +10,8 @@ export class OrderRepositoryImpl implements OrderRepository {
     return this.dataSource.save(products, address, userId)
   }
 
-  getByUser(userId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  getByUser(userId: string): Promise<Order[]> {
+    return this.dataSource.getByUser(userId)
   }
 
   getById(orderId: string, userId: string): Promise<OrderDetail | null> {

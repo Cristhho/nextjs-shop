@@ -1,7 +1,7 @@
-import { Address, OrderDetail, OrderProduct } from '../model';
+import { Address, Order, OrderDetail, OrderProduct } from '../model';
 
 export interface OrderRepository {
   save(products: OrderProduct[], address: Address, userId: string): Promise<string>
-  getByUser(userId: string): Promise<void>
+  getByUser(userId: string): Promise<Order[]>
   getById(orderId: string, userId: string): Promise<OrderDetail|null>
 }
