@@ -22,4 +22,8 @@ export class OrderRepositoryImpl implements OrderRepository {
     return this.dataSource.setTransaction(orderId, transaction)
   }
 
+  payOrder(orderId: string): Promise<void> {
+    return this.dataSource.setPayment(orderId)
+  }
+
 }

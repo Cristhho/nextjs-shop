@@ -1,8 +1,8 @@
 'use client'
 
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { CreateOrderData, CreateOrderActions } from '@paypal/paypal-js';
-import { setTransaction } from '@/lib/actions';
+import { CreateOrderData, CreateOrderActions, OnApproveData, OnApproveActions } from '@paypal/paypal-js';
+import { checkPaypalPayment, setTransaction } from '@/lib/actions';
 
 type Props = {
   orderId: string,
@@ -13,11 +13,11 @@ export const PaypalButton = ({ orderId, amount }: Props) => {
   const [{isPending}] = usePayPalScriptReducer()
   const roundedAmount = Math.round(amount * 100) / 100
 
-  const onCreateOrder = async (data: CreateOrderData, actions: CreateOrderActions): Promise<string> => {
+  const onCreateOrder = async (_: CreateOrderData, actions: CreateOrderActions): Promise<string> => {
     const transactionId = await actions.order.create({
       purchase_units: [
         {
-          //invoice_id: orderId,
+          invoice_id: orderId,
           amount: {
             value: `${ roundedAmount }`,
           }
@@ -32,6 +32,13 @@ export const PaypalButton = ({ orderId, amount }: Props) => {
     return transactionId
   }
 
+  const onApproveHandler = async (_: OnApproveData, actions: OnApproveActions) => {
+    const details = await actions.order?.capture()
+    if (!details) return
+
+    await checkPaypalPayment(details.id)
+  }
+
   if (isPending) {
     return (
       <div className='animate-pulse'>
@@ -44,6 +51,7 @@ export const PaypalButton = ({ orderId, amount }: Props) => {
     <PayPalButtons
       style={{ layout: 'horizontal' }}
       createOrder={onCreateOrder}
+      onApprove={onApproveHandler}
     />
   )
 }

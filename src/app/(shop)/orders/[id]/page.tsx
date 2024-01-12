@@ -100,7 +100,11 @@ export default async function OrderDetailPage( { params }: Props ) {
             </div>
 
             <div className='mt-5 mb-2'>
-              <PaypalButton orderId={id} amount={order.header.total} />
+              {
+                !order.header.isPaid && (
+                  <PaypalButton orderId={id} amount={order.header.total} />
+                )
+              }
             </div>
           </div>
         </div>

@@ -5,4 +5,5 @@ export interface OrderRepository {
   getByUser(userId: string): Promise<Order[]>
   getById(orderId: string, userId: string): Promise<OrderDetail|null>
   setTransaction(orderId: string, transaction: string): Promise<boolean>
+  payOrder(orderId: string): Promise<void>
 }

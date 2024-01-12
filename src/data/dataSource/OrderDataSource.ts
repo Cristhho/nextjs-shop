@@ -5,4 +5,5 @@ export interface OrderDataSource {
   getById(orderId: string, userId: string): Promise<OrderDetail|null>
   getByUser(userId: string): Promise<Order[]>
   setTransaction(orderId: string, transaction: string): Promise<boolean>
+  setPayment(orderId: string): Promise<void>
 }

@@ -117,6 +117,16 @@ export class PrismaOrderDataSource implements OrderDataSource {
     return true
   }
 
+  async setPayment(orderId: string): Promise<void> {
+    await prisma.order.update({
+      where: { id: orderId },
+      data:  {
+        isPaid: true,
+        paidAt: new Date()
+      }
+    })
+  }
+
   private getTotals(orderProducts: OrderProduct[], products: Product[]) {
     return orderProducts.reduce(
       (totals, item) => {
