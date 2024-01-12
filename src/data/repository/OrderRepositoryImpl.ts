@@ -18,4 +18,8 @@ export class OrderRepositoryImpl implements OrderRepository {
     return this.dataSource.getById(orderId, userId)
   }
 
+  setTransaction(orderId: string, transaction: string): Promise<boolean> {
+    return this.dataSource.setTransaction(orderId, transaction)
+  }
+
 }

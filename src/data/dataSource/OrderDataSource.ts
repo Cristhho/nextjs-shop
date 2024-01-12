@@ -4,4 +4,5 @@ export interface OrderDataSource {
   save(products: OrderProduct[], address: Address, userId: string): Promise<string>
   getById(orderId: string, userId: string): Promise<OrderDetail|null>
   getByUser(userId: string): Promise<Order[]>
+  setTransaction(orderId: string, transaction: string): Promise<boolean>
 }

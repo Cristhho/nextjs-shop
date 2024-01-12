@@ -30,3 +30,13 @@ export const placeOrder = async (products: OrderProduct[], address: Address) => 
     };
   }
 }
+
+export const setTransaction = async (orderId: string, transaction: string) => {
+  try {
+    const result = await di.SetTransactionUseCase.execute(orderId, transaction)
+
+    return result
+  } catch (error) {
+    return false
+  }
+}

@@ -106,6 +106,17 @@ export class PrismaOrderDataSource implements OrderDataSource {
     return orders.map((order) => this.mapToDomainOrder(order))
   }
 
+  async setTransaction(orderId: string, transaction: string): Promise<boolean> {
+    const order = await prisma.order.update({
+      where: { id: orderId },
+      data: { transactionId: transaction }
+    })
+
+    if (!order) return false
+
+    return true
+  }
+
   private getTotals(orderProducts: OrderProduct[], products: Product[]) {
     return orderProducts.reduce(
       (totals, item) => {

@@ -2,6 +2,7 @@
 
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { CreateOrderData, CreateOrderActions } from '@paypal/paypal-js';
+import { setTransaction } from '@/lib/actions';
 
 type Props = {
   orderId: string,
@@ -24,6 +25,9 @@ export const PaypalButton = ({ orderId, amount }: Props) => {
         }
       ]
     })
+
+    const res = await setTransaction(orderId, transactionId)
+    if (!res) throw new Error('No se pudo actualizar la orden')
 
     return transactionId
   }

@@ -37,7 +37,8 @@ import {
   SaveOrderUseCase,
   ClearCartUseCase,
   GetOrderByIdUseCase,
-  GetUserOrdersUseCase
+  GetUserOrdersUseCase,
+  SetTransactionUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -98,7 +99,8 @@ const addressUseCases = {
 const orderUseCases = {
   SaveOrderUseCase: new SaveOrderUseCase(orderRepository(prismaOrderDataSource)),
   GetOrderByIdUseCase: new GetOrderByIdUseCase(orderRepository(prismaOrderDataSource)),
-  GetUserOrdersUseCase: new GetUserOrdersUseCase(orderRepository(prismaOrderDataSource))
+  GetUserOrdersUseCase: new GetUserOrdersUseCase(orderRepository(prismaOrderDataSource)),
+  SetTransactionUseCase: new SetTransactionUseCase(orderRepository(prismaOrderDataSource))
 }
 
 export const di = {
@@ -129,5 +131,6 @@ export const di = {
 
   SaveOrderUseCase: orderUseCases.SaveOrderUseCase,
   GetOrderByIdUseCase: orderUseCases.GetOrderByIdUseCase,
-  GetUserOrdersUseCase: orderUseCases.GetUserOrdersUseCase
+  GetUserOrdersUseCase: orderUseCases.GetUserOrdersUseCase,
+  SetTransactionUseCase: orderUseCases.SetTransactionUseCase
 }
