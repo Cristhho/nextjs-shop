@@ -3,7 +3,9 @@ export interface User {
   email: string;
   password: string;
   name: string;
-  role: 'admin'|'user';
+  role: Role;
 }
+
+export type Role = 'admin'|'user';
 
 export type CreatedUser = Pick<User, 'name'|'email'|'id'>

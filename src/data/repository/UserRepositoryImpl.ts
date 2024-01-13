@@ -1,6 +1,6 @@
 import { UserRepository } from '@/domain/repository/UserRepository';
 import { UserDataSource } from '../dataSource/UserDataSource';
-import { CreatedUser, User } from '@/domain/model';
+import { CreatedUser, PaginationOptions, PaginationResponse, User } from '@/domain/model';
 
 export class UserRepositoryImpl implements UserRepository {
 
@@ -16,5 +16,11 @@ export class UserRepositoryImpl implements UserRepository {
 
   save(name: string, email: string, password: string): Promise<CreatedUser> {
     return this.dataSource.createUser(name, email, password)
+  }
+
+  getWithPagination({ page = 1, take = 12,}: PaginationOptions): Promise<PaginationResponse<User>> {
+    if (isNaN(Number(page))) page = 1;
+    if (page < 1) page = 1;
+    return this.dataSource.getWithPagination({ page, take })
   }
 }

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import { CreatedUser, User } from '@/domain/model';
+import { CreatedUser, PaginationOptions, PaginationResponse, User } from '@/domain/model';
 import { UserDataSource } from '../UserDataSource';
 import prisma from '../../../lib/prisma';
 
@@ -40,5 +40,22 @@ export class PrismaUserDataSource implements UserDataSource {
     })
 
     return user
+  }
+
+  async getWithPagination({page, take}: PaginationOptions): Promise<PaginationResponse<User>> {
+    const users = await prisma.user.findMany({
+      take,
+      skip: (page! - 1) * take!,
+      orderBy: {
+        name: 'asc'
+      },
+    })
+    const totalUsers = await prisma.user.count()
+    const totalPages = Math.ceil(totalUsers / take!)
+    return {
+      currentPage: page || 1,
+      totalPages: totalPages,
+      items: users
+    }
   }
 }

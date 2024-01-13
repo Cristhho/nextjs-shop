@@ -14,6 +14,7 @@ export * from './cart/ClearCartUseCase';
 export * from './user/CreateUserUseCase';
 export * from './user/GetUserByEmail';
 export * from './user/SaveUserUseCase';
+export * from './user/GetPaginatedUsersUseCase';
 
 export * from './country/CreateCountryUseCase';
 export * from './country/GetAllCountriesUseCase';
