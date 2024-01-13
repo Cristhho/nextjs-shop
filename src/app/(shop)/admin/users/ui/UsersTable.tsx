@@ -1,6 +1,7 @@
 'use client'
 
-import { User } from '@/domain/model';
+import { Role, User } from '@/domain/model';
+import { changeUserRole } from '@/lib/actions';
 
 type Props = {
   users: User[];
@@ -39,7 +40,7 @@ export const UsersTable = ({ users }: Props) => {
                 
                 <select 
                   value={ user.role }
-                  onChange={(e)=> {}}
+                  onChange={(e) => changeUserRole( user.id!, e.target.value as Role)}
                   className="text-sm w-full p-2 text-gray-900">
                   <option value="admin">Admin</option>
                   <option value="user">User</option>

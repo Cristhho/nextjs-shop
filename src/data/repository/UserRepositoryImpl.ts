@@ -1,6 +1,6 @@
 import { UserRepository } from '@/domain/repository/UserRepository';
 import { UserDataSource } from '../dataSource/UserDataSource';
-import { CreatedUser, PaginationOptions, PaginationResponse, User } from '@/domain/model';
+import { CreatedUser, PaginationOptions, PaginationResponse, Role, User } from '@/domain/model';
 
 export class UserRepositoryImpl implements UserRepository {
 
@@ -22,5 +22,9 @@ export class UserRepositoryImpl implements UserRepository {
     if (isNaN(Number(page))) page = 1;
     if (page < 1) page = 1;
     return this.dataSource.getWithPagination({ page, take })
+  }
+
+  changeRole(userId: string, role: Role): Promise<void> {
+    return this.dataSource.changeRole(userId, role)
   }
 }

@@ -15,6 +15,7 @@ export * from './user/CreateUserUseCase';
 export * from './user/GetUserByEmail';
 export * from './user/SaveUserUseCase';
 export * from './user/GetPaginatedUsersUseCase';
+export * from './user/ChangeRoleUseCase';
 
 export * from './country/CreateCountryUseCase';
 export * from './country/GetAllCountriesUseCase';

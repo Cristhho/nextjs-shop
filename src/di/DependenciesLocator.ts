@@ -41,7 +41,8 @@ import {
   SetTransactionUseCase,
   PayOrderUseCase,
   GetPaginatedOrdersUseCase,
-  GetPaginatedUsersUseCase
+  GetPaginatedUsersUseCase,
+  ChangeRoleUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -86,7 +87,8 @@ const userUseCases = {
   CreateUserUseCase: new CreateUserUseCase(userRepository(prismaUserDataSource)),
   GetUserByEmail: new GetUserByEmail(userRepository(prismaUserDataSource)),
   SaveUserUseCase: new SaveUserUseCase(userRepository(prismaUserDataSource)),
-  GetPaginatedUsersUseCase: new GetPaginatedUsersUseCase(userRepository(prismaUserDataSource))
+  GetPaginatedUsersUseCase: new GetPaginatedUsersUseCase(userRepository(prismaUserDataSource)),
+  ChangeRoleUseCase: new ChangeRoleUseCase(userRepository(prismaUserDataSource))
 }
 
 const countryUseCases = {
@@ -128,6 +130,7 @@ export const di = {
   GetUserByEmail: userUseCases.GetUserByEmail,
   SaveUserUseCase: userUseCases.SaveUserUseCase,
   GetPaginatedUsersUseCase: userUseCases.GetPaginatedUsersUseCase,
+  ChangeRoleUseCase: userUseCases.ChangeRoleUseCase,
 
   CreateCountryUseCase: countryUseCases.CreateCountryUseCase,
   GetAllCountriesUseCase: countryUseCases.GetAllCountriesUseCase,

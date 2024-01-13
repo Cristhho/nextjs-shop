@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import { CreatedUser, PaginationOptions, PaginationResponse, User } from '@/domain/model';
+import { CreatedUser, PaginationOptions, PaginationResponse, Role, User } from '@/domain/model';
 import { UserDataSource } from '../UserDataSource';
 import prisma from '../../../lib/prisma';
 
@@ -57,5 +57,12 @@ export class PrismaUserDataSource implements UserDataSource {
       totalPages: totalPages,
       items: users
     }
+  }
+
+  async changeRole(userId: string, role: Role): Promise<void> {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role }
+    })
   }
 }
