@@ -25,7 +25,7 @@ export default async function UsersPage({ searchParams }: Props) {
     <>
       <Title title="Mantenimiento de usuarios" />
       <div className="mb-10">
-        <UsersTable users={items} />
+        <UsersTable users={items} currentUser={session.user.id} />
         <Pagination totalPages={ totalPages } />
       </div>
 

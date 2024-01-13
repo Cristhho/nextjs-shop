@@ -4,10 +4,11 @@ import { Role, User } from '@/domain/model';
 import { changeUserRole } from '@/lib/actions';
 
 type Props = {
-  users: User[];
+  users: User[],
+  currentUser: string
 }
 
-export const UsersTable = ({ users }: Props) => {
+export const UsersTable = ({ users, currentUser }: Props) => {
   return (
     <table className="min-w-full">
       <thead className="bg-gray-200 border-b">
@@ -37,15 +38,19 @@ export const UsersTable = ({ users }: Props) => {
                 { user.name }
               </td>
               <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                
-                <select 
-                  value={ user.role }
-                  onChange={(e) => changeUserRole( user.id!, e.target.value as Role)}
-                  className="text-sm w-full p-2 text-gray-900">
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-
+                {
+                  (user.id === currentUser) ? (
+                    <span>{user.role}</span>
+                  ) : (
+                    <select 
+                      value={ user.role }
+                      onChange={(e) => changeUserRole( user.id!, e.target.value as Role)}
+                      className="text-sm w-full p-2 text-gray-900">
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                    </select>
+                  )
+                }
               </td>
               
             </tr>
