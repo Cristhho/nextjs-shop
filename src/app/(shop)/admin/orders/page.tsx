@@ -1,8 +1,6 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { IoCardOutline } from 'react-icons/io5';
 
-import { auth } from '@/auth.config';
 import { Pagination, Title } from '@/components';
 import { di } from '@/di/DependenciesLocator';
 
@@ -13,10 +11,6 @@ interface Props {
 }
 
 export default async function OrdersPage({ searchParams }: Props) {
-
-  const session = await auth()
-  if (!session) redirect('/')
-  if (session.user.role !== 'admin') redirect('/')
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
   const { items, totalPages } = await di.GetPaginatedOrdersUseCase.execute({ page, take: 10 })
 
