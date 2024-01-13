@@ -1,6 +1,6 @@
 import { Order, OrderAddress, Prisma, Product } from '@prisma/client';
 
-import { OrderProduct, Address, OrderDetail, OrderHeader, OrderItem, Order as DomainOrder } from '@/domain/model';
+import { OrderProduct, Address, OrderDetail, OrderHeader, OrderItem, Order as DomainOrder, PaginationOptions, PaginationResponse } from '@/domain/model';
 import { OrderDataSource } from '../OrderDataSource';
 import prisma from '@/lib/prisma';
 import { PrismaProductDataSource } from "./PrismaProductDataSource";
@@ -51,7 +51,7 @@ export class PrismaOrderDataSource implements OrderDataSource {
     return order;
   }
 
-  async getById(orderId: string, userId: string): Promise<OrderDetail|null> {
+  async getById(orderId: string, userId: string, isAdmin: boolean): Promise<OrderDetail|null> {
     const order: PrismaOrder|null = await prisma.order.findUnique({
       where: {
         id: orderId,
@@ -81,7 +81,7 @@ export class PrismaOrderDataSource implements OrderDataSource {
     });
 
     if (!order) return null
-    if (order.userId !== userId) return null
+    if (!isAdmin && order.userId !== userId) return null
 
     return this.mapToDomain(order);
   }
@@ -125,6 +125,33 @@ export class PrismaOrderDataSource implements OrderDataSource {
         paidAt: new Date()
       }
     })
+  }
+
+  async getWithPagination({page, take}: PaginationOptions): Promise<PaginationResponse<DomainOrder>> {
+    const orders = await prisma.order.findMany({
+      take,
+      skip: (page! - 1) * take!,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      select: {
+        id: true,
+        isPaid: true,
+        OrderAddress: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        }
+      }
+    })
+    const totalOrders = await prisma.order.count()
+    const totalPages = Math.ceil(totalOrders / take!)
+    return {
+      currentPage: page || 1,
+      totalPages: totalPages,
+      items: orders.map((order) => this.mapToDomainOrder(order))
+    }
   }
 
   private getTotals(orderProducts: OrderProduct[], products: Product[]) {

@@ -1,6 +1,6 @@
 import { OrderRepository } from '@/domain/repository/OrderRepository';
 import { OrderDataSource } from '../dataSource/OrderDataSource';
-import { OrderProduct, Address, OrderDetail, Order } from '@/domain/model';
+import { OrderProduct, Address, OrderDetail, Order, PaginationOptions, PaginationResponse } from '@/domain/model';
 
 export class OrderRepositoryImpl implements OrderRepository {
 
@@ -14,8 +14,8 @@ export class OrderRepositoryImpl implements OrderRepository {
     return this.dataSource.getByUser(userId)
   }
 
-  getById(orderId: string, userId: string): Promise<OrderDetail | null> {
-    return this.dataSource.getById(orderId, userId)
+  getById(orderId: string, userId: string, isAdmin: boolean): Promise<OrderDetail | null> {
+    return this.dataSource.getById(orderId, userId, isAdmin)
   }
 
   setTransaction(orderId: string, transaction: string): Promise<boolean> {
@@ -24,6 +24,12 @@ export class OrderRepositoryImpl implements OrderRepository {
 
   payOrder(orderId: string): Promise<void> {
     return this.dataSource.setPayment(orderId)
+  }
+
+  getWithPagination({ page = 1, take = 12,}: PaginationOptions): Promise<PaginationResponse<Order>> {
+    if (isNaN(Number(page))) page = 1;
+    if (page < 1) page = 1;
+    return this.dataSource.getWithPagination({ page, take })
   }
 
 }

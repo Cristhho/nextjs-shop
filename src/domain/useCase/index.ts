@@ -27,3 +27,4 @@ export * from './order/GetOrderByIdUseCase';
 export * from './order/GetUserOrdersUseCase';
 export * from './order/SetTransactionUseCase';
 export * from './order/PayOrderUseCase';
+export * from './order/GetPaginatedOrdersUseCase';

@@ -19,7 +19,7 @@ export default async function OrderDetailPage( { params }: Props ) {
   const session = await auth()
   if (!session) redirect('/')
   const { id } = params;
-  const order = await di.GetOrderByIdUseCase.execute(id, session.user.id)
+  const order = await di.GetOrderByIdUseCase.execute(id, session.user.id, session.user.role === 'admin')
 
   if (!order) redirect('/')
 
