@@ -18,6 +18,11 @@ export default async function ProductsPage({ searchParams }: Props) {
   return (
     <>
       <Title title="Mantenimiento de productos" />
+      <div className="flex justify-end mb-5">
+        <Link href="/admin/products/new" className="btn-primary">
+          Nuevo producto
+        </Link>
+      </div>
       <div className="mb-10">
         <table className="min-w-full">
           <thead className="bg-gray-200 border-b">

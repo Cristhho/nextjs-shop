@@ -1,5 +1,5 @@
-import { Category } from '../model';
-import { CategoryRepository } from '../repository/CategoryRepositort';
+import { Category } from '../../model';
+import { CategoryRepository } from '../../repository/CategoryRepositort';
 
 export class GetCategoryByNameUseCase {
 

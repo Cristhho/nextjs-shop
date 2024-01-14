@@ -16,4 +16,18 @@ export class PrismaCategoryDataSource implements CategoryDataSource {
     })
   }
 
+  async getAll(): Promise<Category[]> {
+    try {
+      const categories = await prisma.category.findMany({
+        orderBy: {
+          name: 'asc'
+        }
+      })
+
+      return categories
+    } catch (error) {
+      return []
+    }
+  }
+
 }

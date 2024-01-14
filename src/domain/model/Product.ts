@@ -10,6 +10,12 @@ export interface Product {
   title: string;
   type?: Type;
   gender: Gender;
+  ProductImage?: ProductImage[];
+}
+
+export type ProductImage = {
+  id: number,
+  url: string
 }
 
 export type Gender = 'men'|'women'|'kid'|'unisex';

@@ -6,12 +6,14 @@ import { UserDataSource } from '../data/dataSource/UserDataSource';
 import { AddressDataSource } from '../data/dataSource/AddressDataSource';
 import { OrderDataSource } from '../data/dataSource/OrderDataSource';
 import { ZustandCartDataSource } from '../data/dataSource/zustand/ZustandCartDataSource';
+import { CategoryDataSource } from '../data/dataSource/CategoryDataSource';
 import {
   ProductRepositoryImpl,
   UserRepositoryImpl,
   CountryRepositoryImpl,
   AddressRepositoryImpl,
-  OrderRepositoryImpl
+  OrderRepositoryImpl,
+  CategoryRepositoryImpl
 } from '../data/repository';
 import { CartRepositoryImpl } from '../data/repository/CartRepositoryImpl';
 import { ProductRepository } from '../domain/repository/ProductRepository';
@@ -42,7 +44,8 @@ import {
   PayOrderUseCase,
   GetPaginatedOrdersUseCase,
   GetPaginatedUsersUseCase,
-  ChangeRoleUseCase
+  ChangeRoleUseCase,
+  GetAllCategoriesUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -60,6 +63,7 @@ const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source
 const countryRepository = (source: CountryDataSource) => new CountryRepositoryImpl(source)
 const addressRepository = (source: AddressDataSource) => new AddressRepositoryImpl(source)
 const orderRepository = (source: OrderDataSource) => new OrderRepositoryImpl(source)
+const categoryRepository = (source: CategoryDataSource) => new CategoryRepositoryImpl(source)
 
 const productUseCases = (productRepository: ProductRepository) => {
   return {
@@ -111,6 +115,10 @@ const orderUseCases = {
   GetPaginatedOrdersUseCase: new GetPaginatedOrdersUseCase(orderRepository(prismaOrderDataSource)),
 }
 
+const categoryUseCases = {
+  GetAllCategoriesUseCase: new GetAllCategoriesUseCase(categoryRepository(prismaCategoryDataSource))
+}
+
 export const di = {
   GetProductsInMemory: memorySource.GetProductsUseCase,
   GetProductsUseCase: prismaSource.GetProductsUseCase,
@@ -144,5 +152,7 @@ export const di = {
   GetUserOrdersUseCase: orderUseCases.GetUserOrdersUseCase,
   SetTransactionUseCase: orderUseCases.SetTransactionUseCase,
   PayOrderUseCase: orderUseCases.PayOrderUseCase,
-  GetPaginatedOrdersUseCase: orderUseCases.GetPaginatedOrdersUseCase
+  GetPaginatedOrdersUseCase: orderUseCases.GetPaginatedOrdersUseCase,
+
+  GetAllCategoriesUseCase: categoryUseCases.GetAllCategoriesUseCase
 }

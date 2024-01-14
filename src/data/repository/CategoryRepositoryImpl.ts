@@ -10,4 +10,8 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     return this.dataSource.getByName(name)
   }
 
+  getAll(): Promise<Category[]> {
+    return this.dataSource.getAll()
+  }
+
 }

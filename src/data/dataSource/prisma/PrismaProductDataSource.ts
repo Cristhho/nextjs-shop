@@ -5,7 +5,7 @@ import { ProductDataSource } from '../ProductDataSource';
 import { PrismaCategoryDataSource } from './PrismaCategoryDataSource';
 import { ProductsPaginationOptions } from './interfaces/PaginationOptions';
 
-type ProductImageUrl = Pick<ProductImage, 'url'>
+type ProductImageUrl = Pick<ProductImage, 'url'|'id'>
 type DBProduct = PrismaProduct & {
   ProductImage: ProductImageUrl[],
   category?: Pick<Category, 'name'>
@@ -21,7 +21,8 @@ export class PrismaProductDataSource implements ProductDataSource {
         ProductImage: {
           take: 2,
           select: {
-            url: true
+            url: true,
+            id: true
           }
         },
         category: {
@@ -37,7 +38,7 @@ export class PrismaProductDataSource implements ProductDataSource {
   createManyProducts(products: Product[]): Promise<boolean> {
     return new Promise((res, rej) => {
       products.forEach(async (product) => {
-        const {images, type, ...$product} = product;
+        const {images, type, ProductImage, ...$product} = product;
         const categoryDB = await this.prismaCategorySource!.getByName(type!.toLowerCase());
         const dbProduct = await prisma.product.create({
           data: {
@@ -67,7 +68,8 @@ export class PrismaProductDataSource implements ProductDataSource {
           ProductImage: {
             take: 2,
             select: {
-              url: true
+              url: true,
+              id: true
             }
           }
         },
@@ -101,7 +103,8 @@ export class PrismaProductDataSource implements ProductDataSource {
           ProductImage: {
             take: 2,
             select: {
-              url: true
+              url: true,
+              id: true
             }
           }
         },
