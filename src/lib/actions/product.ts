@@ -1,7 +1,9 @@
 'use server'
 
-import { di } from '@/di/DependenciesLocator'
+import { revalidatePath } from 'next/cache'
 import {z} from 'zod'
+
+import { di } from '@/di/DependenciesLocator'
 
 const productSchema = z.object({
   id: z.string().uuid().optional().nullable(),
@@ -40,6 +42,9 @@ export const createOrUpdateProduct = async (formData: FormData) => {
   
   try {
     const res = await di.SaveProductUseCase.execute(product)
+    revalidatePath('/admin/products');
+    revalidatePath(`/admin/products/${ product.slug }`);
+    revalidatePath(`/product/${ product.slug }`);
     return {
       ok: true,
       product: res

@@ -57,7 +57,7 @@ export const ProductForm = ({ categories, product }: Props) => {
       return;
     }
 
-    router.replace(`/admin/product/${res.product}`)
+    router.replace(`/admin/products/${res.product}`)
   }
 
   return (
