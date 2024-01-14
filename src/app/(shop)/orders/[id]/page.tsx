@@ -3,7 +3,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { IoCardOutline } from 'react-icons/io5';
 
-import { PaypalButton, Title } from '@/components';
+import { PaypalButton, ProductImage, Title } from '@/components';
 import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
 import { auth } from '@/auth.config';
@@ -48,8 +48,8 @@ export default async function OrderDetailPage( { params }: Props ) {
             {
               order.items.map( product => (
                 <div key={`${product.slug}_${product.size}`} className="flex mb-5">
-                  <Image
-                    src={ `/products/${product.image}` }
+                  <ProductImage
+                    src={product.image}
                     width={ 100 }
                     height={ 100 }
                     style={ {

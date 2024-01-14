@@ -7,6 +7,7 @@ import clsx from 'clsx'
 
 import { Category, Product, ProductFormInputs } from '@/domain/model'
 import { createOrUpdateProduct } from '@/lib/actions'
+import { ProductImage } from '@/components'
 
 type Props = {
   product: Partial<Product>,
@@ -156,9 +157,9 @@ export const ProductForm = ({ categories, product }: Props) => {
           {
             product.ProductImage?.map( image => (
               <div key={ image.id }>
-                <Image
+                <ProductImage
                   alt={ product.title ?? '' }
-                  src={ `/products/${ image.url }` }
+                  src={image.url}
                   width={ 300 }
                   height={ 300 }
                   className="rounded-t shadow-md"
