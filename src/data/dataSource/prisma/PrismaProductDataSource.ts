@@ -151,7 +151,7 @@ export class PrismaProductDataSource implements ProductDataSource {
   }
 
   async save(product: CreateProduct): Promise<string> {
-    const { id, ...rest } = product
+    const { id, images, ...rest } = product
     const createdProduct = await prisma.$transaction(async (tx) => {
       let product: PrismaProduct
       const tagsArray = rest.tags.split(',').map((tag) => tag.trim().toLowerCase())
@@ -182,6 +182,16 @@ export class PrismaProductDataSource implements ProductDataSource {
               set: tagsArray
             }
           }
+        })
+      }
+
+      if (images) {
+        const $images = images.map((image) => ({
+          url: image!,
+          productId: product.id
+        }));
+        await tx.productImage.createMany({
+          data: $images
         })
       }
 

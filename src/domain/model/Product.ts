@@ -43,5 +43,6 @@ export interface CartSummary {
 
 export type CreateProduct = {
   id?: string|null,
-  gender: string
-} & Omit<ProductFormInputs, 'gender'>
+  gender: string,
+  images?: (string | null)[] | null
+} & Omit<ProductFormInputs, 'gender'|'images'>

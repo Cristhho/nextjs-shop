@@ -21,4 +21,5 @@ export type ProductFormInputs = {
   tags: string,
   gender: Gender,
   categoryId: string,
+  images?: FileList
 }

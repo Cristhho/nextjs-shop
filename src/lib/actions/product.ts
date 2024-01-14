@@ -2,8 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import {z} from 'zod'
+import {v2 as cloudinary} from 'cloudinary'
 
 import { di } from '@/di/DependenciesLocator'
+import { CreateProduct } from '@/domain/model'
+
+cloudinary.config(process.env.CLOUDINARY_URL ?? '')
 
 const productSchema = z.object({
   id: z.string().uuid().optional().nullable(),
@@ -39,9 +43,21 @@ export const createOrUpdateProduct = async (formData: FormData) => {
   }
   const product = productParsed.data;
   product.slug = product.slug.toLowerCase().replace(/ /g, '-' ).trim()
+
+  let images: (string | null)[] | null = []
+  if (formData.getAll('images')) {
+    images = await uploadImages(formData.getAll('images') as File[])
+    if ( !images ) {
+      throw new Error('No se pudo cargar las imágenes, rollingback');
+    }
+  }
   
+  const productData: CreateProduct = {
+    ...product,
+    images
+  }
   try {
-    const res = await di.SaveProductUseCase.execute(product)
+    const res = await di.SaveProductUseCase.execute(productData)
     revalidatePath('/admin/products');
     revalidatePath(`/admin/products/${ product.slug }`);
     revalidatePath(`/product/${ product.slug }`);
@@ -51,5 +67,30 @@ export const createOrUpdateProduct = async (formData: FormData) => {
     }
   } catch (error) {
     return { ok: false }
+  }
+}
+
+const uploadImages = async( images: File[] ) => {
+  try {
+    const uploadPromises = images.map( async( image) => {
+
+      try {
+        const buffer = await image.arrayBuffer();
+        const base64Image = Buffer.from(buffer).toString('base64');
+  
+        return cloudinary.uploader.upload(`data:image/png;base64,${ base64Image }`, { folder: 'teslo' })
+          .then( r => r.secure_url );
+        
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    })
+
+
+    const uploadedImages = await Promise.all( uploadPromises );
+    return uploadedImages
+  } catch (error) {
+    return null
   }
 }
