@@ -1,4 +1,4 @@
-import { PaginationOptions, PaginationResponse, Product } from "@/domain/model";
+import { CreateProduct, PaginationOptions, PaginationResponse, Product } from "@/domain/model";
 import { ProductDataSource } from "../ProductDataSource";
 
 const products: Product[] = [
@@ -704,6 +704,10 @@ export class ProductInMemory implements ProductDataSource {
   }
 
   getStock(slug: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+
+  save(product: CreateProduct): Promise<string> {
     throw new Error("Method not implemented.");
   }
 }

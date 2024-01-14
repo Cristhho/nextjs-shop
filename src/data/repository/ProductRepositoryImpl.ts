@@ -1,4 +1,4 @@
-import { PaginationResponse, Product } from '@/domain/model';
+import { CreateProduct, PaginationResponse, Product } from '@/domain/model';
 import { ProductRepository } from '@/domain/repository/ProductRepository';
 import { ProductDataSource } from '../dataSource/ProductDataSource';
 import { ProductsPaginationOptions } from '../dataSource/prisma/interfaces/PaginationOptions';
@@ -30,5 +30,9 @@ export class ProductRepositoryImpl implements ProductRepository {
 
   getProductStock(slug: string): Promise<number> {
     return this.dataSource.getStock(slug)
+  }
+
+  save(product: CreateProduct): Promise<string> {
+    return this.dataSource.save(product)
   }
 }

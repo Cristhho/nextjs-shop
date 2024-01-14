@@ -1,17 +1,20 @@
 'use client'
 
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
 
 import { Category, Product, ProductFormInputs } from '@/domain/model'
+import { createOrUpdateProduct } from '@/lib/actions'
 
 type Props = {
-  product: Product,
+  product: Partial<Product>,
   categories: Category[]
 }
 const sizes = ['XS','S','M','L','XL','XXL']
 export const ProductForm = ({ categories, product }: Props) => {
+  const router = useRouter()
   const {
     handleSubmit,
     register,
@@ -22,7 +25,7 @@ export const ProductForm = ({ categories, product }: Props) => {
   } = useForm<ProductFormInputs>({
     defaultValues: {
       ...product,
-      tags: product.tags.join(','),
+      tags: product.tags?.join(','),
       sizes: product.sizes ?? [],
     }
   })
@@ -34,8 +37,26 @@ export const ProductForm = ({ categories, product }: Props) => {
     setValue('sizes', Array.from( sizes ) );
   }
 
-  const onSubmit = (data: ProductFormInputs) => {
-    
+  const onSubmit = async (data: ProductFormInputs) => {
+    const formData = new FormData()
+    const {...productToSave} = data
+    if (product.id) formData.append('id', product.id)
+    formData.append('title', productToSave.title)
+    formData.append('slug', productToSave.slug)
+    formData.append('description', productToSave.description)
+    formData.append('price', productToSave.price.toString() )
+    formData.append('inStock', productToSave.inStock.toString() )
+    formData.append('sizes', productToSave.sizes.toString() )
+    formData.append('tags', productToSave.tags )
+    formData.append('categoryId', productToSave.categoryId )
+    formData.append('gender', productToSave.gender )
+
+    const res = await createOrUpdateProduct(formData)
+    if (!res.ok) {
+      return;
+    }
+
+    router.replace(`/admin/product/${res.product}`)
   }
 
   return (
@@ -91,6 +112,14 @@ export const ProductForm = ({ categories, product }: Props) => {
         </button>
       </div>
       <div className="w-full">
+        <div className="flex flex-col mb-2">
+          <span>Inventario</span>
+          <input
+            type="number"
+            className="p-2 border rounded-md bg-gray-200"
+            {...register("inStock", { required: true, min: 0 })}
+          />
+        </div>
         <div className="flex flex-col">
           <span>Tallas</span>
           <div className="flex flex-wrap">

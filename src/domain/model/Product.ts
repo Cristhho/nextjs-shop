@@ -1,3 +1,5 @@
+import { ProductFormInputs } from './form/Form';
+
 export interface Product {
   id?: string;
   description: string;
@@ -38,3 +40,8 @@ export interface CartSummary {
   total: number;
   itemsInCart: number;
 }
+
+export type CreateProduct = {
+  id?: string|null,
+  gender: string
+} & Omit<ProductFormInputs, 'gender'>

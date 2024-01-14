@@ -1,4 +1,4 @@
-import { PaginationOptions, PaginationResponse, Product } from '../model';
+import { CreateProduct, PaginationOptions, PaginationResponse, Product } from '../model';
 
 export interface ProductRepository {
   getAll(): Promise<Product[]>;
@@ -6,4 +6,5 @@ export interface ProductRepository {
   getWithPagination(options: PaginationOptions): Promise<PaginationResponse<Product>>
   getBySlug(slug: string): Promise<Product|null>;
   getProductStock(slug: string): Promise<number>;
+  save(product: CreateProduct): Promise<string>;
 }

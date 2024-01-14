@@ -45,7 +45,8 @@ import {
   GetPaginatedOrdersUseCase,
   GetPaginatedUsersUseCase,
   ChangeRoleUseCase,
-  GetAllCategoriesUseCase
+  GetAllCategoriesUseCase,
+  SaveProductUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -71,7 +72,8 @@ const productUseCases = (productRepository: ProductRepository) => {
     CreateProductUseCase: new CreateProductUseCase(productRepository),
     GetPaginatedProductsUseCase: new GetPaginatedProductsUseCase(productRepository),
     GetProductBySlugUseCase: new GetProductBySlugUseCase(productRepository),
-    GetProductStockUseCase: new GetProductStockUseCase(productRepository)
+    GetProductStockUseCase: new GetProductStockUseCase(productRepository),
+    SaveProductUseCase: new SaveProductUseCase(productRepository)
   }
 }
 
@@ -126,6 +128,7 @@ export const di = {
   GetPaginatedProductsUseCase: prismaSource.GetPaginatedProductsUseCase,
   GetProductBySlugUseCase: prismaSource.GetProductBySlugUseCase,
   GetProductStockUseCase: prismaSource.GetProductStockUseCase,
+  SaveProductUseCase: prismaSource.SaveProductUseCase,
 
   AddProductToCartUseCase: cartUseCases.AddProductToCartUseCase,
   UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,

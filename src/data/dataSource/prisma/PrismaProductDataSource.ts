@@ -1,5 +1,5 @@
-import { Category, Product as PrismaProduct, ProductImage } from '@prisma/client';
-import { OrderProduct, PaginationResponse, Product, Type } from '@/domain/model';
+import { Category, Gender, Product as PrismaProduct, ProductImage, Size } from '@prisma/client';
+import { CreateProduct, OrderProduct, PaginationResponse, Product, Type } from '@/domain/model';
 import prisma from '../../../lib/prisma';
 import { ProductDataSource } from '../ProductDataSource';
 import { PrismaCategoryDataSource } from './PrismaCategoryDataSource';
@@ -148,6 +148,47 @@ export class PrismaProductDataSource implements ProductDataSource {
     })
 
     return productsDB
+  }
+
+  async save(product: CreateProduct): Promise<string> {
+    const { id, ...rest } = product
+    const createdProduct = await prisma.$transaction(async (tx) => {
+      let product: PrismaProduct
+      const tagsArray = rest.tags.split(',').map((tag) => tag.trim().toLowerCase())
+
+      if (id) {
+        product = await tx.product.update({
+          where: { id },
+          data: {
+            ...rest,
+            gender: rest.gender as Gender,
+            sizes: {
+              set: rest.sizes as Size[]
+            },
+            tags: {
+              set: tagsArray
+            }
+          }
+        })
+      } else {
+        product = await tx.product.create({
+          data: {
+            ...rest,
+            gender: rest.gender as Gender,
+            sizes: {
+              set: rest.sizes as Size[]
+            },
+            tags: {
+              set: tagsArray
+            }
+          }
+        })
+      }
+
+      return product.slug
+    })
+
+    return createdProduct
   }
 
   private mapToDomain(product: DBProduct): Product {
