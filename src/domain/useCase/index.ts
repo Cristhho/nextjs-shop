@@ -4,6 +4,7 @@ export * from './product/GetPaginatedProductsUseCase';
 export * from './product/GetProductBySlugUseCase';
 export * from './product/GetProductStockUseCase';
 export * from './product/SaveProductUseCase';
+export * from './product/DeleteImageUseCase';
 
 export * from './cart/AddProductToCartUseCase';
 export * from './cart/UpdateProductQuantityUseCase';

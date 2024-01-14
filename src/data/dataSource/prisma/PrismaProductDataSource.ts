@@ -201,6 +201,23 @@ export class PrismaProductDataSource implements ProductDataSource {
     return createdProduct
   }
 
+  async deleteImage(imageId: number): Promise<string> {
+    const deletedImage = await prisma.productImage.delete({
+      where: {
+        id: imageId
+      },
+      select: {
+        product: {
+          select: {
+            slug: true
+          }
+        }
+      }
+    })
+
+    return deletedImage.product.slug
+  }
+
   private mapToDomain(product: DBProduct): Product {
     return {
       ...product,

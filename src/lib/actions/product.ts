@@ -94,3 +94,27 @@ const uploadImages = async( images: File[] ) => {
     return null
   }
 }
+
+export const deleteProductImage = async( imageId: number, imageUrl: string ) => {
+  if ( !imageUrl.startsWith('http') ) {
+    return {
+      ok: false,
+      error: 'No se pueden borrar imagenes de FS'
+    }
+  }
+
+  const imageName = imageUrl
+    .split('/')
+    .pop()
+    ?.split('.')[0] ?? ''
+  
+  try {
+    await cloudinary.uploader.destroy(`teslo/${imageName}`)
+    const res = await di.DeleteImageUseCase.execute(imageId)
+    revalidatePath('/admin/products')
+    revalidatePath(`/admin/products/${res}`)
+    revalidatePath(`/product/${res}`)
+  } catch (error) {
+    return { ok: false }
+  }
+}

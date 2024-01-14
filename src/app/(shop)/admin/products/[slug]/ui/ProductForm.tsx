@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
 
 import { Category, Product, ProductFormInputs } from '@/domain/model'
-import { createOrUpdateProduct } from '@/lib/actions'
+import { createOrUpdateProduct, deleteProductImage } from '@/lib/actions'
 import { ProductImage } from '@/components'
 
 type Props = {
@@ -174,7 +174,7 @@ export const ProductForm = ({ categories, product }: Props) => {
                 />
                 <button 
                   type="button"
-                  onClick={ () => console.log( image.id, image.url )  }
+                  onClick={() => deleteProductImage( image.id, image.url )}
                   className="btn-danger w-full rounded-b-xl">
                   Eliminar
                 </button>

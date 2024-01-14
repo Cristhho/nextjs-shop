@@ -710,4 +710,8 @@ export class ProductInMemory implements ProductDataSource {
   save(product: CreateProduct): Promise<string> {
     throw new Error("Method not implemented.");
   }
+
+  deleteImage(imageId: number): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
 }

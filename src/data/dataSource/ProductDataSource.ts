@@ -8,4 +8,5 @@ export interface ProductDataSource {
   getBySlug(slug: string): Promise<Product|null>;
   getStock(slug: string): Promise<number>;
   save(product: CreateProduct): Promise<string>
+  deleteImage(imageId: number): Promise<string>
 }

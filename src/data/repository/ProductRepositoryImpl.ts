@@ -35,4 +35,8 @@ export class ProductRepositoryImpl implements ProductRepository {
   save(product: CreateProduct): Promise<string> {
     return this.dataSource.save(product)
   }
+
+  deleteImage(imageId: number): Promise<string> {
+    return this.dataSource.deleteImage(imageId)
+  }
 }

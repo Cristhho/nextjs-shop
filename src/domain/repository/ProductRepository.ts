@@ -7,4 +7,5 @@ export interface ProductRepository {
   getBySlug(slug: string): Promise<Product|null>;
   getProductStock(slug: string): Promise<number>;
   save(product: CreateProduct): Promise<string>;
+  deleteImage(imageId: number): Promise<string>;
 }

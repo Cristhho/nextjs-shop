@@ -1,5 +1,13 @@
 import { CountryDataSource } from '../data/dataSource/CountryDataSource';
-import { PrismaAddressDataSource, PrismaCategoryDataSource, PrismaCountryDataSource, PrismaOrderDataSource, PrismaProductDataSource, PrismaUserDataSource, ProductInMemory } from '../data/dataSource';
+import {
+  PrismaAddressDataSource,
+  PrismaCategoryDataSource,
+  PrismaCountryDataSource,
+  PrismaOrderDataSource,
+  PrismaProductDataSource,
+  PrismaUserDataSource,
+  ProductInMemory
+} from '../data/dataSource';
 import { CartDataSource } from '../data/dataSource/CartDataSource';
 import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
@@ -46,7 +54,8 @@ import {
   GetPaginatedUsersUseCase,
   ChangeRoleUseCase,
   GetAllCategoriesUseCase,
-  SaveProductUseCase
+  SaveProductUseCase,
+  DeleteImageUseCase
 } from '../domain/useCase';
 
 const prismaCategoryDataSource = new PrismaCategoryDataSource()
@@ -73,7 +82,8 @@ const productUseCases = (productRepository: ProductRepository) => {
     GetPaginatedProductsUseCase: new GetPaginatedProductsUseCase(productRepository),
     GetProductBySlugUseCase: new GetProductBySlugUseCase(productRepository),
     GetProductStockUseCase: new GetProductStockUseCase(productRepository),
-    SaveProductUseCase: new SaveProductUseCase(productRepository)
+    SaveProductUseCase: new SaveProductUseCase(productRepository),
+    DeleteImageUseCase: new DeleteImageUseCase(productRepository)
   }
 }
 
@@ -129,6 +139,7 @@ export const di = {
   GetProductBySlugUseCase: prismaSource.GetProductBySlugUseCase,
   GetProductStockUseCase: prismaSource.GetProductStockUseCase,
   SaveProductUseCase: prismaSource.SaveProductUseCase,
+  DeleteImageUseCase: prismaSource.DeleteImageUseCase,
 
   AddProductToCartUseCase: cartUseCases.AddProductToCartUseCase,
   UpdateProductQuantityUseCase: cartUseCases.UpdateProductQuantityUseCase,
