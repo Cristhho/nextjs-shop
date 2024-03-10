@@ -1,5 +1,8 @@
-import { CreateProduct, PaginationOptions, PaginationResponse, Product } from "@/domain/model";
-import { ProductDataSource } from "../ProductDataSource";
+import 'reflect-metadata';
+import { injectable } from 'inversify';
+
+import { CreateProduct, PaginationOptions, PaginationResponse, Product } from '@/domain/model';
+import { ProductDataSource } from '../ProductDataSource';
 
 const products: Product[] = [
   {
@@ -682,6 +685,7 @@ const products: Product[] = [
   },
 ];
 
+@injectable()
 export class ProductInMemory implements ProductDataSource {
   getAllProducts(): Promise<Product[]> {
     return new Promise((res, rej) => {

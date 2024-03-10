@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { inject, injectable } from 'inversify';
 import { Order, OrderAddress, Prisma, Product } from '@prisma/client';
 
 import { OrderProduct, Address, OrderDetail, OrderHeader, OrderItem, Order as DomainOrder, PaginationOptions, PaginationResponse } from '@/domain/model';
@@ -5,9 +7,13 @@ import { OrderDataSource } from '../OrderDataSource';
 import prisma from '@/lib/prisma';
 import { PrismaProductDataSource } from "./PrismaProductDataSource";
 import { PrismaOrder, SingleOrder } from './interfaces/Order';
+import { PRISMA_TYPES } from '@/di/prisma/types';
 
+@injectable()
 export class PrismaOrderDataSource implements OrderDataSource {
-  constructor(private readonly prismaProduct: PrismaProductDataSource) {}
+  constructor(
+    @inject(PRISMA_TYPES.Product)private readonly prismaProduct: PrismaProductDataSource
+  ) {}
 
   async save(
     orderProducts: OrderProduct[],

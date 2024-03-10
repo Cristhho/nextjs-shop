@@ -1,9 +1,12 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 import bcrypt from 'bcryptjs';
 
 import { CreatedUser, PaginationOptions, PaginationResponse, Role, User } from '@/domain/model';
 import { UserDataSource } from '../UserDataSource';
 import prisma from '../../../lib/prisma';
 
+@injectable()
 export class PrismaUserDataSource implements UserDataSource {
 
   createManyUsers(users: User[]): Promise<boolean> {

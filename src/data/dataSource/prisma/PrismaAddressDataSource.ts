@@ -1,9 +1,12 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 import { Address as PrismaAddress } from '@prisma/client';
 
 import { Address } from '@/domain/model';
 import { AddressDataSource } from '../AddressDataSource';
 import prisma from '@/lib/prisma';
 
+@injectable()
 export class PrismaAddressDataSource implements AddressDataSource {
 
   async getByUser(userId: string){

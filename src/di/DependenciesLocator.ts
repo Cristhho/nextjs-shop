@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { CountryDataSource } from '../data/dataSource/CountryDataSource';
 import {
   PrismaAddressDataSource,
@@ -57,15 +59,26 @@ import {
   SaveProductUseCase,
   DeleteImageUseCase
 } from '../domain/useCase';
+import { DiContainer } from './container';
+import { PRISMA_TYPES } from './prisma/types';
+import { bindPrisma } from './prisma/bindings';
+import { bindMemory } from './memory/bindings';
+import { MEMORY_TYPES } from './memory/types';
 
-const prismaCategoryDataSource = new PrismaCategoryDataSource()
-const productInMemoryDataSource = new ProductInMemory()
-const prismaProductDataSource = new PrismaProductDataSource(prismaCategoryDataSource)
+export const diInstance = DiContainer.getInstance();
+(function() {
+  bindPrisma();
+  bindMemory();
+})();
+
+const prismaCategoryDataSource = diInstance.get<PrismaCategoryDataSource>(PRISMA_TYPES.Category)
+const productInMemoryDataSource = diInstance.get<ProductInMemory>(MEMORY_TYPES.Product)
+const prismaProductDataSource = diInstance.get<PrismaProductDataSource>(PRISMA_TYPES.Product)
 const zustandCartDataSource = new ZustandCartDataSource()
-const prismaUserDataSource = new PrismaUserDataSource()
-const prismaCountryDataSource = new PrismaCountryDataSource()
-const prismaAddressDataSource = new PrismaAddressDataSource()
-const prismaOrderDataSource = new PrismaOrderDataSource(prismaProductDataSource)
+const prismaUserDataSource = diInstance.get<PrismaUserDataSource>(PRISMA_TYPES.User)
+const prismaCountryDataSource = diInstance.get<PrismaCountryDataSource>(PRISMA_TYPES.Country)
+const prismaAddressDataSource = diInstance.get<PrismaAddressDataSource>(PRISMA_TYPES.Address)
+const prismaOrderDataSource = diInstance.get<PrismaOrderDataSource>(PRISMA_TYPES.Order)
 
 const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)

@@ -1,9 +1,13 @@
+import 'reflect-metadata';
+import { inject, injectable } from 'inversify';
 import { Category, Gender, Product as PrismaProduct, ProductImage, Size } from '@prisma/client';
+
+import { PRISMA_TYPES } from '@/di/prisma/types';
 import { CreateProduct, OrderProduct, PaginationResponse, Product, Type } from '@/domain/model';
 import prisma from '../../../lib/prisma';
 import { ProductDataSource } from '../ProductDataSource';
-import { PrismaCategoryDataSource } from './PrismaCategoryDataSource';
 import { ProductsPaginationOptions } from './interfaces/PaginationOptions';
+import type { CategoryDataSource } from '../CategoryDataSource';
 
 type ProductImageUrl = Pick<ProductImage, 'url'|'id'>
 type DBProduct = PrismaProduct & {
@@ -11,9 +15,12 @@ type DBProduct = PrismaProduct & {
   category?: Pick<Category, 'name'>
 }
 
+@injectable()
 export class PrismaProductDataSource implements ProductDataSource {
 
-  constructor(private readonly prismaCategorySource?: PrismaCategoryDataSource) {}
+  constructor(
+    @inject(PRISMA_TYPES.Category) private readonly prismaCategorySource?: CategoryDataSource
+  ) {}
 
   async getAllProducts(): Promise<Product[]> {
     const productsDB = await prisma.product.findMany({

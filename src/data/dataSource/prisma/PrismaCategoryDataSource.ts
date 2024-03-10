@@ -1,7 +1,11 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
+
 import { Category } from '@/domain/model';
 import prisma from '../../../lib/prisma';
 import { CategoryDataSource } from '../CategoryDataSource';
 
+@injectable()
 export class PrismaCategoryDataSource implements CategoryDataSource {
 
   async getByName(name: string) {

@@ -1,7 +1,11 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
+
 import { Country } from '@/domain/model';
 import { CountryDataSource } from '../CountryDataSource';
 import prisma from '../../../lib/prisma';
 
+@injectable()
 export class PrismaCountryDataSource implements CountryDataSource {
 
   createManyCountries(countries: Country[]): Promise<boolean> {
