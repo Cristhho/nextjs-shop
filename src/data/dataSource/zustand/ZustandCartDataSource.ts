@@ -1,7 +1,11 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
+
 import { Address, CartProduct, CartSummary, Size } from '@/domain/model';
 import { useCartStore } from '../../../store';
 import { CartDataSource } from '../CartDataSource';
 
+@injectable()
 export class ZustandCartDataSource implements CartDataSource {
 
   addProduct(product: CartProduct): void {

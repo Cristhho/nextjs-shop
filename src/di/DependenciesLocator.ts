@@ -64,17 +64,20 @@ import { PRISMA_TYPES } from './prisma/types';
 import { bindPrisma } from './prisma/bindings';
 import { bindMemory } from './memory/bindings';
 import { MEMORY_TYPES } from './memory/types';
+import { ZUSTAND_TYPES } from './zustand/types';
+import { bindZustand } from './zustand/bindings';
 
 export const diInstance = DiContainer.getInstance();
 (function() {
   bindPrisma();
   bindMemory();
+  bindZustand();
 })();
 
 const prismaCategoryDataSource = diInstance.get<PrismaCategoryDataSource>(PRISMA_TYPES.Category)
 const productInMemoryDataSource = diInstance.get<ProductInMemory>(MEMORY_TYPES.Product)
 const prismaProductDataSource = diInstance.get<PrismaProductDataSource>(PRISMA_TYPES.Product)
-const zustandCartDataSource = new ZustandCartDataSource()
+const zustandCartDataSource = diInstance.get<ZustandCartDataSource>(ZUSTAND_TYPES.Cart)
 const prismaUserDataSource = diInstance.get<PrismaUserDataSource>(PRISMA_TYPES.User)
 const prismaCountryDataSource = diInstance.get<PrismaCountryDataSource>(PRISMA_TYPES.Country)
 const prismaAddressDataSource = diInstance.get<PrismaAddressDataSource>(PRISMA_TYPES.Address)
