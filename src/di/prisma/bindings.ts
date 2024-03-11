@@ -17,7 +17,7 @@ import { diInstance } from '../DependenciesLocator';
 
 export function bindPrisma() {
   diInstance.bindSingleton<CategoryDataSource, PrismaCategoryDataSource>(PRISMA_TYPES.Category, PrismaCategoryDataSource);
-  diInstance.bindSingleton<ProductDataSource, PrismaProductDataSource>(PRISMA_TYPES.Product, PrismaProductDataSource);
+  diInstance.bindSingleton<ProductDataSource, PrismaProductDataSource>(PRISMA_TYPES.Product, PrismaProductDataSource, { targetName: 'prisma' });
   diInstance.bindSingleton<UserDataSource, PrismaUserDataSource>(PRISMA_TYPES.User, PrismaUserDataSource);
   diInstance.bindSingleton<CountryDataSource, PrismaCountryDataSource>(PRISMA_TYPES.Country, PrismaCountryDataSource);
   diInstance.bindSingleton<OrderDataSource, PrismaOrderDataSource>(PRISMA_TYPES.Order, PrismaOrderDataSource);

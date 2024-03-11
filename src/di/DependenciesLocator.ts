@@ -6,12 +6,9 @@ import {
   PrismaCategoryDataSource,
   PrismaCountryDataSource,
   PrismaOrderDataSource,
-  PrismaProductDataSource,
   PrismaUserDataSource,
-  ProductInMemory
 } from '../data/dataSource';
 import { CartDataSource } from '../data/dataSource/CartDataSource';
-import { ProductDataSource } from '../data/dataSource/ProductDataSource';
 import { UserDataSource } from '../data/dataSource/UserDataSource';
 import { AddressDataSource } from '../data/dataSource/AddressDataSource';
 import { OrderDataSource } from '../data/dataSource/OrderDataSource';
@@ -63,27 +60,26 @@ import { DiContainer } from './container';
 import { PRISMA_TYPES } from './prisma/types';
 import { bindPrisma } from './prisma/bindings';
 import { bindMemory } from './memory/bindings';
-import { MEMORY_TYPES } from './memory/types';
 import { ZUSTAND_TYPES } from './zustand/types';
 import { bindZustand } from './zustand/bindings';
+import { REPOSITORY_TYPES } from './repository/types';
+import { bindRepository } from './repository/bindings';
 
 export const diInstance = DiContainer.getInstance();
 (function() {
   bindPrisma();
   bindMemory();
   bindZustand();
+  bindRepository();
 })();
 
 const prismaCategoryDataSource = diInstance.get<PrismaCategoryDataSource>(PRISMA_TYPES.Category)
-const productInMemoryDataSource = diInstance.get<ProductInMemory>(MEMORY_TYPES.Product)
-const prismaProductDataSource = diInstance.get<PrismaProductDataSource>(PRISMA_TYPES.Product)
 const zustandCartDataSource = diInstance.get<ZustandCartDataSource>(ZUSTAND_TYPES.Cart)
 const prismaUserDataSource = diInstance.get<PrismaUserDataSource>(PRISMA_TYPES.User)
 const prismaCountryDataSource = diInstance.get<PrismaCountryDataSource>(PRISMA_TYPES.Country)
 const prismaAddressDataSource = diInstance.get<PrismaAddressDataSource>(PRISMA_TYPES.Address)
 const prismaOrderDataSource = diInstance.get<PrismaOrderDataSource>(PRISMA_TYPES.Order)
 
-const productsRepository = (source: ProductDataSource) => new ProductRepositoryImpl(source)
 const cartRepository = (source: CartDataSource) => new CartRepositoryImpl(source)
 const userRepository = (source: UserDataSource) => new UserRepositoryImpl(source)
 const countryRepository = (source: CountryDataSource) => new CountryRepositoryImpl(source)
@@ -103,8 +99,9 @@ const productUseCases = (productRepository: ProductRepository) => {
   }
 }
 
-const prismaSource = productUseCases(productsRepository(prismaProductDataSource))
-const memorySource = productUseCases(productsRepository(productInMemoryDataSource))
+const productRepositoryFactory = diInstance.getFactory<ProductRepositoryImpl>(REPOSITORY_TYPES.Product);
+const prismaSource = productUseCases(productRepositoryFactory('prisma') as ProductRepositoryImpl)
+const memorySource = productUseCases(productRepositoryFactory('memory') as ProductRepositoryImpl)
 
 const cartUseCases = {
   AddProductToCartUseCase: new AddProductToCartUseCase(cartRepository(zustandCartDataSource)),

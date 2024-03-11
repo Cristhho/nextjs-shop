@@ -1,10 +1,17 @@
+import 'reflect-metadata';
+import { inject, injectable, named } from 'inversify';
+
 import { CreateProduct, PaginationResponse, Product } from '@/domain/model';
 import { ProductRepository } from '@/domain/repository/ProductRepository';
-import { ProductDataSource } from '../dataSource/ProductDataSource';
+import type { ProductDataSource } from '../dataSource/ProductDataSource';
 import { ProductsPaginationOptions } from '../dataSource/prisma/interfaces/PaginationOptions';
+import { PRISMA_TYPES } from '@/di/prisma/types';
 
+@injectable()
 export class ProductRepositoryImpl implements ProductRepository {
-  constructor(private readonly dataSource: ProductDataSource) {}
+  constructor(
+    @inject(PRISMA_TYPES.Product) private readonly dataSource: ProductDataSource
+  ) {}
 
   getAll(): Promise<Product[]> {
     return this.dataSource.getAllProducts()

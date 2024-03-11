@@ -1,8 +1,8 @@
 import { ProductDataSource } from '@/data/dataSource/ProductDataSource';
 import { diInstance } from '../DependenciesLocator';
 import { ProductInMemory } from '@/data/dataSource';
-import { MEMORY_TYPES } from './types';
+import { PRISMA_TYPES } from '../prisma/types';
 
 export function bindMemory() {
-  diInstance.bindSingleton<ProductDataSource, ProductInMemory>(MEMORY_TYPES.Product, ProductInMemory);
+  diInstance.bindSingleton<ProductDataSource, ProductInMemory>(PRISMA_TYPES.Product, ProductInMemory, { targetName: 'memory' });
 }
