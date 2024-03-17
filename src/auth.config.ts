@@ -3,7 +3,8 @@ import credentials from 'next-auth/providers/credentials';
 import {z} from 'zod';
 import bcrypt from 'bcryptjs';
 
-import { di } from './di/DependenciesLocator';
+import { diInstance, init } from './di/CompositionRoot';
+import { GetUserByEmail } from './domain/useCase';
  
 export const authConfig: NextAuthConfig = {
   pages: {
@@ -25,6 +26,7 @@ export const authConfig: NextAuthConfig = {
   providers: [
     credentials({
       async authorize(credentials) {
+        init()
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
@@ -33,7 +35,7 @@ export const authConfig: NextAuthConfig = {
 
         const { email, password } = parsedCredentials.data
         
-        const user = await di.GetUserByEmail.execute(email)
+        const user = await diInstance.get<GetUserByEmail>(GetUserByEmail).execute(email)
         if (!user) return null;
         if (!bcrypt.compareSync(password, user.password)) return null;
 

@@ -7,9 +7,10 @@ import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
 import { Address, AddressFormInputs, Country } from '@/domain/model';
-import { di } from '@/di/DependenciesLocator';
 import { useCartStore } from '@/store';
 import { deleteAddress, saveAddress } from '@/lib/actions';
+import { SaveAddressUseCase } from '@/domain/useCase';
+import { diInstance } from '@/di/CompositionRoot';
 
 type Props = {
   countries: Country[],
@@ -35,7 +36,7 @@ export const AddressForm = ({ countries, dbAddress = {} }: Props) => {
 
   const onSubmit = async (data: AddressFormInputs) => {
     const {remember, ...rest} = data
-    di.SaveAddressUseCase.execute(rest)
+    diInstance.get<SaveAddressUseCase>(SaveAddressUseCase).execute(rest)
 
     if (remember) {
       await saveAddress(rest, session!.user.id)

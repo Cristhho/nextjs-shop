@@ -1,14 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { ProductImage, QuantitySelector } from '@/components';
 import { useCartStore } from '@/store';
-import { di } from '@/di/DependenciesLocator';
 import { CartProduct } from '@/domain/model';
 import { currencyFormat } from '@/utils';
+import { diInstance } from '@/di/CompositionRoot';
+import { RemoveProductFromCartUseCase, UpdateProductQuantityUseCase } from '@/domain/useCase';
 
 export const ProductsInCart = () => {
   const productsInCart = useCartStore((state) => state.cart)
@@ -25,7 +25,7 @@ export const ProductsInCart = () => {
   }
 
   const onRemove = (product: CartProduct) => {
-    di.RemoveProductFromCartUseCase.execute(product.id, product.size)
+    diInstance.get<RemoveProductFromCartUseCase>(RemoveProductFromCartUseCase).execute(product.id, product.size)
   }
 
   if (productsInCart.length < 1) redirect('/empty');
@@ -55,7 +55,7 @@ export const ProductsInCart = () => {
               <p>{ currencyFormat(product.price) }</p>
               <QuantitySelector
                 quantity={ product.quantity }
-                onValueChange={(qty) => di.UpdateProductQuantityUseCase.execute(product, qty)}
+                onValueChange={(qty) => diInstance.get<UpdateProductQuantityUseCase>(UpdateProductQuantityUseCase).execute(product, qty)}
               />
 
               <button className="underline mt-3" onClick={() => onRemove(product)}>

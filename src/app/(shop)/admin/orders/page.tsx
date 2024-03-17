@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { IoCardOutline } from 'react-icons/io5';
 
 import { Pagination, Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetPaginatedOrdersUseCase } from '@/domain/useCase';
 
 interface Props {
   searchParams: {
@@ -12,7 +13,7 @@ interface Props {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
-  const { items, totalPages } = await di.GetPaginatedOrdersUseCase.execute({ page, take: 10 })
+  const { items, totalPages } = await diInstance.get<GetPaginatedOrdersUseCase>(GetPaginatedOrdersUseCase).execute({ page, take: 10 })
 
   return (
     <>

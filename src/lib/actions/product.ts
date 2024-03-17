@@ -4,8 +4,11 @@ import { revalidatePath } from 'next/cache'
 import {z} from 'zod'
 import {v2 as cloudinary} from 'cloudinary'
 
-import { di } from '@/di/DependenciesLocator'
 import { CreateProduct } from '@/domain/model'
+import { DeleteImageUseCase, SaveProductUseCase } from '@/domain/useCase'
+import { diInstance, init } from '@/di/CompositionRoot'
+
+init()
 
 cloudinary.config(process.env.CLOUDINARY_URL ?? '')
 
@@ -57,7 +60,7 @@ export const createOrUpdateProduct = async (formData: FormData) => {
     images
   }
   try {
-    const res = await di.SaveProductUseCase.execute(productData)
+    const res = await diInstance.get<SaveProductUseCase>(SaveProductUseCase).execute(productData)
     revalidatePath('/admin/products');
     revalidatePath(`/admin/products/${ product.slug }`);
     revalidatePath(`/product/${ product.slug }`);
@@ -110,7 +113,7 @@ export const deleteProductImage = async( imageId: number, imageUrl: string ) => 
   
   try {
     await cloudinary.uploader.destroy(`teslo/${imageName}`)
-    const res = await di.DeleteImageUseCase.execute(imageId)
+    const res = await diInstance.get<DeleteImageUseCase>(DeleteImageUseCase).execute(imageId)
     revalidatePath('/admin/products')
     revalidatePath(`/admin/products/${res}`)
     revalidatePath(`/product/${res}`)

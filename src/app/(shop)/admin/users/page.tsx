@@ -1,7 +1,8 @@
 import { auth } from '@/auth.config';
 import { Pagination, Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
 import { UsersTable } from './ui/UsersTable';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetPaginatedUsersUseCase } from '@/domain/useCase';
 
 interface Props {
   searchParams: {
@@ -12,7 +13,7 @@ interface Props {
 export default async function UsersPage({ searchParams }: Props) {
   const session = await auth()
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
-  const { items, totalPages } = await di.GetPaginatedUsersUseCase.execute({ page, take: 10 })
+  const { items, totalPages } = await diInstance.get<GetPaginatedUsersUseCase>(GetPaginatedUsersUseCase).execute({ page, take: 10 })
 
   return (
     <>

@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 import { Pagination, ProductImage, Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetPaginatedProductsUseCase } from '@/domain/useCase';
 
 interface Props {
   searchParams: {
@@ -13,7 +13,7 @@ interface Props {
 
 export default async function ProductsPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
-  const { items, totalPages } = await di.GetPaginatedProductsUseCase.execute({ page, take: 10 })
+  const { items, totalPages } = await diInstance.get<GetPaginatedProductsUseCase>(GetPaginatedProductsUseCase).execute({ page, take: 10 })
 
   return (
     <>

@@ -13,7 +13,7 @@ import { CountryDataSource } from '@/data/dataSource/CountryDataSource';
 import { OrderDataSource } from '@/data/dataSource/OrderDataSource';
 import { AddressDataSource } from '@/data/dataSource/AddressDataSource';
 import { PRISMA_TYPES } from './types';
-import { diInstance } from '../DependenciesLocator';
+import { diInstance } from '../CompositionRoot';
 
 export function bindPrisma() {
   diInstance.bindSingleton<CategoryDataSource, PrismaCategoryDataSource>(PRISMA_TYPES.Category, PrismaCategoryDataSource);

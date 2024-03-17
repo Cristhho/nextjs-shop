@@ -1,21 +1,23 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import { di } from '@/di/DependenciesLocator'
 import { CartSummary } from '@/domain/model'
 import { useCartStore } from '@/store'
 import { currencyFormat } from '@/utils'
+import { diInstance } from '@/di/CompositionRoot'
+import { GetCartSummaryUseCase } from '@/domain/useCase'
 
 export const OrderSummary = () => {
   const [loaded, setLoaded] = useState(false)
-  const [summary, setSummary] = useState<CartSummary>(di.GetCartSummaryUseCase.execute())
+  const getCartSummaryUseCase = diInstance.get<GetCartSummaryUseCase>(GetCartSummaryUseCase);
+  const [summary, setSummary] = useState<CartSummary>(getCartSummaryUseCase.execute())
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
-  useEffect(() => useCartStore.subscribe((state) => {
-    setSummary(di.GetCartSummaryUseCase.execute())
+  useEffect(() => useCartStore.subscribe((_) => {
+    setSummary(getCartSummaryUseCase.execute())
   }), [])
 
   if (!loaded) {

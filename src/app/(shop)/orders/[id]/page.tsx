@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
-import Image from 'next/image';
 import clsx from 'clsx';
 import { IoCardOutline } from 'react-icons/io5';
 
 import { PaypalButton, ProductImage, Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
 import { auth } from '@/auth.config';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetOrderByIdUseCase } from '@/domain/useCase';
 
 interface Props {
   params: {
@@ -19,7 +19,7 @@ export default async function OrderDetailPage( { params }: Props ) {
   const session = await auth()
   if (!session) redirect('/')
   const { id } = params;
-  const order = await di.GetOrderByIdUseCase.execute(id, session.user.id, session.user.role === 'admin')
+  const order = await diInstance.get<GetOrderByIdUseCase>(GetOrderByIdUseCase).execute(id, session.user.id, session.user.role === 'admin')
 
   if (!order) redirect('/')
 

@@ -3,8 +3,11 @@
 import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/auth.config';
-import { di } from '@/di/DependenciesLocator';
 import { Role } from '@/domain/model';
+import { diInstance, init } from '@/di/CompositionRoot';
+import { ChangeRoleUseCase } from '@/domain/useCase';
+
+init();
 
 export const changeUserRole = async (userId: string, role: Role) => {
   const session = await auth();
@@ -17,7 +20,7 @@ export const changeUserRole = async (userId: string, role: Role) => {
   }
 
   try {
-    await di.ChangeRoleUseCase.execute(userId, role)
+    await diInstance.get<ChangeRoleUseCase>(ChangeRoleUseCase).execute(userId, role)
     revalidatePath('/admin/users')
     return {
       ok: true,

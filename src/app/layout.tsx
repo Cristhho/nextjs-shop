@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import { inter } from '@/config/fonts';
 
-
-
 import './globals.css';
 import { Provider } from '@/components';
-
-
+import { init } from '@/di/CompositionRoot';
 
 export const metadata: Metadata = {
   title: {
@@ -16,6 +13,7 @@ export const metadata: Metadata = {
   description: 'Una tienda virtual de productos',
 }
 
+init();
 export default function RootLayout({
   children,
 }: {

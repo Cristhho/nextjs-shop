@@ -1,6 +1,5 @@
+import "reflect-metadata";
 import { Container, interfaces } from 'inversify';
-
-type Newable<T> = new (...args: any[]) => T;
 
 type BindingOptions = {
   targetName: string;
@@ -23,7 +22,9 @@ export class DiContainer {
     return DiContainer.instance;
   }
 
-  bindSingleton<T, V extends T>(token: symbol, bindTo: Newable<V>, options?: BindingOptions) {
+  bindSingleton<T, V extends T>(token: symbol, bindTo: interfaces.Newable<V>, options?: BindingOptions) {
+    if (this.container.isBound(token)) return;
+
     if (!options) {
       this.container
         .bind<T>(token)
@@ -39,11 +40,19 @@ export class DiContainer {
   }
 
   bindFactory<T>(token: symbol, cb: (context: interfaces.Context) => interfaces.Factory<T, [string]>) {
+    if (this.container.isBound(token)) return;
+
     this.container.bind<interfaces.Factory<T>>(token)
       .toFactory<T, [string]>(cb);
   }
 
-  get<T>(token: symbol) {
+  bindSelf<T>(serviceIdentifier: interfaces.Newable<T>) {
+    if (this.container.isBound(serviceIdentifier)) return;
+    
+    this.container.bind<T>(serviceIdentifier).toSelf();
+  }
+
+  get<T>(token: interfaces.ServiceIdentifier<T>) {
     return this.container.get<T>(token);
   }
 

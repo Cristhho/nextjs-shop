@@ -1,8 +1,11 @@
 'use server'
 
 import { auth } from '@/auth.config';
-import { di } from '@/di/DependenciesLocator';
+import { diInstance, init } from '@/di/CompositionRoot';
 import { Address, OrderProduct } from '@/domain/model';
+import { SaveOrderUseCase, SetTransactionUseCase } from '@/domain/useCase';
+
+init()
 
 export const placeOrder = async (products: OrderProduct[], address: Address) => {
   const session = await auth();
@@ -16,7 +19,7 @@ export const placeOrder = async (products: OrderProduct[], address: Address) => 
   }
 
   try {
-    const order = await di.SaveOrderUseCase.execute(products, address, userId)
+    const order = await diInstance.get<SaveOrderUseCase>(SaveOrderUseCase).execute(products, address, userId)
     return {
       ok: true,
       order: order,
@@ -33,7 +36,7 @@ export const placeOrder = async (products: OrderProduct[], address: Address) => 
 
 export const setTransaction = async (orderId: string, transaction: string) => {
   try {
-    const result = await di.SetTransactionUseCase.execute(orderId, transaction)
+    const result = await diInstance.get<SetTransactionUseCase>(SetTransactionUseCase).execute(orderId, transaction)
 
     return result
   } catch (error) {

@@ -2,6 +2,8 @@ import { Title } from '@/components';
 import { di } from '@/di/DependenciesLocator';
 import { redirect } from 'next/navigation';
 import { ProductForm } from './ui/ProductForm';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetAllCategoriesUseCase, GetProductBySlugUseCase } from '@/domain/useCase';
 
 interface Props {
   params: {
@@ -14,8 +16,8 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = params;
 
   const [ product, categories ] = await Promise.all([
-    di.GetProductBySlugUseCase.execute(slug),
-    di.GetAllCategoriesUseCase.execute()
+    diInstance.get<GetProductBySlugUseCase>(GetProductBySlugUseCase).execute(slug),
+    diInstance.get<GetAllCategoriesUseCase>(GetAllCategoriesUseCase).execute()
   ]);
  
   if ( !product && slug !== 'new' ) {

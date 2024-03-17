@@ -1,8 +1,9 @@
 export const revalidate = 60;
 
 import { Pagination, ProductGrid, Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
+import { diInstance } from '@/di/CompositionRoot';
 import { Gender } from '@/domain/model';
+import { GetPaginatedProductsUseCase } from '@/domain/useCase';
 
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 export default async function GenderPage({ params, searchParams }: Props) {
   const page = searchParams.page ? parseInt( searchParams.page ) : 1;
   const { gender } = params;
-  const { items: products, totalPages } = await di.GetPaginatedProductsUseCase.execute({ page, gender, take: 6 })
+  const { items: products, totalPages } = await diInstance.get<GetPaginatedProductsUseCase>(GetPaginatedProductsUseCase).execute({ page, gender, take: 6 })
 
   const labels: Record<Gender, string>  = {
     'men': 'para hombres',

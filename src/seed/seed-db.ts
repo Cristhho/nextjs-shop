@@ -1,7 +1,8 @@
 import prisma from '../lib/prisma';
-import { di } from '../di/DependenciesLocator';
 import { initialData } from './seed';
 import { countries } from './seed-countries';
+import { diInstance } from '@/di/CompositionRoot';
+import { CreateCountryUseCase, CreateProductUseCase, CreateUserUseCase, GetProductsUseCase } from '@/domain/useCase';
 
 async function main() {
   await prisma.orderAddress.deleteMany();
@@ -16,14 +17,18 @@ async function main() {
 
   const categories = ['shirts', 'pants', 'hoodies', 'hats'];
   const users = initialData.users
-  const products = await di.GetProductsInMemory.execute()
+  const getProductsUseCase = diInstance.get<GetProductsUseCase>(GetProductsUseCase);
+  const createProductUseCase = diInstance.get<CreateProductUseCase>(CreateProductUseCase);
+  const createUserUseCase = diInstance.get<CreateUserUseCase>(CreateUserUseCase);
+  const createCountryUseCase = diInstance.get<CreateCountryUseCase>(CreateCountryUseCase);
+  const products = await getProductsUseCase.execute('memory')
   await prisma.category.createMany({
     data: categories.map((name) => ({ name }))
   });
 
-  await di.CreateProductUseCase.execute(products)
-  await di.CreateUserUseCase.execute(users)
-  await di.CreateCountryUseCase.execute(countries)
+  await createProductUseCase.execute(products)
+  await createUserUseCase.execute(users)
+  await createCountryUseCase.execute(countries)
 
   console.log("seed executed. Check database!!");
 }

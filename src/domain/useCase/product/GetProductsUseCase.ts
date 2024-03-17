@@ -1,10 +1,19 @@
+import "reflect-metadata";
+import { inject, injectable } from 'inversify';
+
 import { Product } from '../../model';
-import { ProductRepository } from '../../repository/ProductRepository';
+import { REPOSITORY_TYPES } from '@/di/repository/types';
+import { ProductRepositoryImpl } from '@/data/repository';
 
+@injectable()
 export class GetProductsUseCase {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    @inject(REPOSITORY_TYPES.Product)
+    private readonly factory: (dataSourceName: string) => ProductRepositoryImpl
+  ) {}
 
-  execute(): Promise<Product[]> {
-    return this.productRepository.getAll()
+  execute(source: string): Promise<Product[]> {
+    const productRepository = this.factory(source);
+    return productRepository.getAll()
   }
 }

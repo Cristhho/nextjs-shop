@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation';
 import { titleFont } from '@/config/fonts';
 import { ProductMobileSlideshow, ProductSlideshow, StockLabel } from '@/components';
 import { AddToCart } from './ui/AddToCart';
-import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetProductBySlugUseCase } from '@/domain/useCase';
 
 interface Props {
   params: {
@@ -22,7 +23,7 @@ export async function generateMetadata(
   const slug = params.slug
  
   // fetch data
-  const product = await di.GetProductBySlugUseCase.execute(slug)
+  const product = await diInstance.get<GetProductBySlugUseCase>(GetProductBySlugUseCase).execute(slug)
  
   // optionally access and extend (rather than replace) parent metadata
   //const previousImages = (await parent).openGraph?.images || []
@@ -41,7 +42,7 @@ export async function generateMetadata(
 export default async function ProductPage( { params }: Props ) {
 
   const { slug } = params;
-  const product = await di.GetProductBySlugUseCase.execute(slug)
+  const product = await diInstance.get<GetProductBySlugUseCase>(GetProductBySlugUseCase).execute(slug)
 
   if ( !product ) {
     notFound();

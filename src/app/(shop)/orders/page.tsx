@@ -4,13 +4,14 @@ import { IoCardOutline } from 'react-icons/io5';
 
 import { auth } from '@/auth.config';
 import { Title } from '@/components';
-import { di } from '@/di/DependenciesLocator';
+import { diInstance } from '@/di/CompositionRoot';
+import { GetUserOrdersUseCase } from '@/domain/useCase';
 
 export default async function OrdersPage() {
 
   const session = await auth()
   if (!session) redirect('/')
-  const orders = await di.GetUserOrdersUseCase.execute(session.user.id)
+  const orders = await diInstance.get<GetUserOrdersUseCase>(GetUserOrdersUseCase).execute(session.user.id)
 
   return (
     <>

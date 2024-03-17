@@ -1,10 +1,14 @@
-import { OrderRepository } from '@/domain/repository/OrderRepository';
-import { OrderDataSource } from '../dataSource/OrderDataSource';
-import { OrderProduct, Address, OrderDetail, Order, PaginationOptions, PaginationResponse } from '@/domain/model';
+import { inject, injectable } from 'inversify';
 
+import { OrderRepository } from '@/domain/repository/OrderRepository';
+import type { OrderDataSource } from '../dataSource/OrderDataSource';
+import { OrderProduct, Address, OrderDetail, Order, PaginationOptions, PaginationResponse } from '@/domain/model';
+import { PRISMA_TYPES } from '@/di/prisma/types';
+
+@injectable()
 export class OrderRepositoryImpl implements OrderRepository {
 
-  constructor(private readonly dataSource: OrderDataSource) {}
+  constructor(@inject(PRISMA_TYPES.Order) private readonly dataSource: OrderDataSource) {}
 
   save(products: OrderProduct[], address: Address, userId: string): Promise<string> {
     return this.dataSource.save(products, address, userId)

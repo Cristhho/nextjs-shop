@@ -2,8 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { di } from '@/di/DependenciesLocator'
 import { getPayPalBearerToken, verifyPayPalPayment } from './paypal'
+import { diInstance, init } from '@/di/CompositionRoot'
+import { PayOrderUseCase } from '@/domain/useCase'
+
+init()
 
 export const checkPaypalPayment = async (transactionId: string) => {
   const authToken = await getPayPalBearerToken()
@@ -32,7 +35,7 @@ export const checkPaypalPayment = async (transactionId: string) => {
   }
 
   try {
-    await di.PayOrderUseCase.execute(orderId)
+    await diInstance.get<PayOrderUseCase>(PayOrderUseCase).execute(orderId)
 
     revalidatePath(`/orders/${ orderId }`)
     return {

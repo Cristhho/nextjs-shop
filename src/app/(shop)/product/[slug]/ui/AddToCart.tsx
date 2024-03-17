@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 import { QuantitySelector, SizeSelector } from '@/components';
 import { Product, Size } from '@/domain/model';
-import { di } from '@/di/DependenciesLocator';
+import { diInstance } from '@/di/CompositionRoot';
+import { AddProductToCartUseCase } from '@/domain/useCase';
 
 type Props = {
   product: Product
@@ -18,7 +19,7 @@ export const AddToCart = ({ product }: Props) => {
     setPosted(true)
     if (!size) return
 
-    di.AddProductToCartUseCase.execute(product, size, qty)
+    diInstance.get<AddProductToCartUseCase>(AddProductToCartUseCase).execute(product, size, qty)
     setPosted(false);
     setQty(1);
     setSize(undefined);

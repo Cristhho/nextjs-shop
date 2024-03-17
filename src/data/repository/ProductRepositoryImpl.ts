@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { inject, injectable, named } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import { CreateProduct, PaginationResponse, Product } from '@/domain/model';
 import { ProductRepository } from '@/domain/repository/ProductRepository';

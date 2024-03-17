@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
 import { useCartStore } from '@/store';
-import { di } from '@/di/DependenciesLocator';
 import { currencyFormat } from '@/utils';
 import { OrderProduct } from '@/domain/model';
 import { placeOrder } from '@/lib/actions';
+import { ClearCartUseCase, GetCartSummaryUseCase } from '@/domain/useCase';
+import { diInstance } from '@/di/CompositionRoot';
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false)
@@ -17,7 +18,7 @@ export const PlaceOrder = () => {
   const router = useRouter()
   const address = useCartStore((state) => state.address)
   const productsInCart = useCartStore((state) => state.cart)
-  const summary = di.GetCartSummaryUseCase.execute()
+  const summary = diInstance.get<GetCartSummaryUseCase>(GetCartSummaryUseCase).execute()
 
   useEffect(() => {
     setLoaded(true)
@@ -46,7 +47,7 @@ export const PlaceOrder = () => {
       return;
     }
 
-    di.ClearCartUseCase.execute()
+    diInstance.get<ClearCartUseCase>(ClearCartUseCase).execute()
     router.replace(`/orders/${resp.order}`)
     setSavingOrder(false)
   }

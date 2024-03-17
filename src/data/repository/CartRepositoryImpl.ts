@@ -1,10 +1,14 @@
-import { Address, CartProduct, CartSummary, Size } from '@/domain/model';
-import { CartRepository } from '@/domain/repository/CartRepository';
-import { CartDataSource } from '../dataSource/CartDataSource';
+import { inject, injectable } from 'inversify';
 
+import { Address, CartProduct, Size } from '@/domain/model';
+import { CartRepository } from '@/domain/repository/CartRepository';
+import type { CartDataSource } from '../dataSource/CartDataSource';
+import { ZUSTAND_TYPES } from '@/di/zustand/types';
+
+@injectable()
 export class CartRepositoryImpl implements CartRepository {
 
-  constructor(private readonly dataSource: CartDataSource) {}
+  constructor(@inject(ZUSTAND_TYPES.Cart) private readonly dataSource: CartDataSource) {}
 
   addProductToCart(product: CartProduct) {
     this.dataSource.addProduct(product)

@@ -1,9 +1,13 @@
-import { User } from '../../model';
-import { UserRepository } from '../../repository/UserRepository';
+import { inject, injectable } from 'inversify';
 
+import { User } from '../../model';
+import type { UserRepository } from '../../repository/UserRepository';
+import { REPOSITORY_TYPES } from '@/di/repository/types';
+
+@injectable()
 export class CreateUserUseCase {
 
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(@inject(REPOSITORY_TYPES.User) private readonly userRepository: UserRepository) {}
 
   execute(users: User[]) {
     return this.userRepository.saveMany(users)

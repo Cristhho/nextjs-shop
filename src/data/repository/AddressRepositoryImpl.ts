@@ -1,10 +1,14 @@
+import { inject, injectable } from 'inversify';
+
 import { Address } from '@/domain/model';
 import { AddressRepository } from '@/domain/repository/AddressRepository';
-import { AddressDataSource } from '../dataSource/AddressDataSource';
+import type { AddressDataSource } from '../dataSource/AddressDataSource';
+import { PRISMA_TYPES } from '@/di/prisma/types';
 
+@injectable()
 export class AddressRepositoryImpl implements AddressRepository {
 
-  constructor(private readonly dataSource: AddressDataSource) {}
+  constructor(@inject(PRISMA_TYPES.Address) private readonly dataSource: AddressDataSource) {}
 
   getByUser(userId: string) {
     return this.dataSource.getByUser(userId)

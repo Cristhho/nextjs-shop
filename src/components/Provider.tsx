@@ -1,10 +1,13 @@
 'use client'
 
-import { SessionProvider } from 'next-auth/react'
 import { PropsWithChildren } from 'react'
+import { SessionProvider } from 'next-auth/react'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { init } from '@/di/CompositionRoot'
 
 type Props = PropsWithChildren
+
+init()
 
 export const Provider = ({ children }: Props) => {
   return (
